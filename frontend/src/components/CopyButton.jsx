@@ -20,7 +20,7 @@ const CopyButton = ({ text, user ,model, pdf}) => {
       onClick={handleCopy}
       className={`absolute ${
         user === "user" ? "-bottom-10 right-0 p-[6px_6px] hover:bg-white/5 " : "-bottom-4 left-0 opacity-100 p-[6px_6px] hover:bg-white/5"
-      } ${model === "assistant" ? "bottom-0 w-20 ml-60 left-96 bg-transparent cursor-pointer":""} ${pdf === "resource_link" ? "-bottom-7 opacity-100":" "} flex items-center gap-2 rounded-md opacity-0 group-hover:opacity-100 transition-all `}
+      } ${model === "assistant" ? "bottom-0 w-20 ml-60 left-96 bg-transparent cursor-pointer":""} ${pdf === "resource_link" ? "-bottom-7 opacity-100":" "} flex items-center gap-2 rounded-md opacity-100 lg:opacity-0 group-hover:opacity-100 transition-all `}
     >
       {copied ? (
         <CheckIcon className="h-[14px] w-[14px] text-green-400" />

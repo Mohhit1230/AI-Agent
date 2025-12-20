@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 // FeaturesPanel.jsx
 // import React from "react";
-import { Mail, FileText, Twitter, Calculator,Zap} from "lucide-react";
+import { Mail, FileText, Twitter, Calculator,Zap, Goal} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card"
 
 const features = [
@@ -9,6 +9,7 @@ const features = [
     { icon: Mail, title: "Send Emails", subtitle: "Draft & deliver fast" },
     { icon: Twitter, title: "Post on Twitter (X)", subtitle: "Compose & schedule" },
     { icon: FileText, title: "Generate PDF/DOCX/TXT", subtitle: "Produce docs quickly" },
+    { icon: Goal , title: "GoDaddy Login", subtitle: "Automate website tasks" },
   
 ];
 

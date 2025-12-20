@@ -136,13 +136,8 @@ function App() {
     <>
       <div className="bg-[#0f1115] h-fit body">
         <div className=" fixed inset-0 bg-[radial-gradient(70%_60%_at_30%_0%,rgba(16,185,129,0.14),rgba(0,0,0,0)_60%),radial-gradient(60%_50%_at_80%_10%,rgba(147,51,234,0.12),rgba(0,0,0,0)_55%)]" />
-        <header className="sticky top-0 z-30 w-full h-[9%] pb-3 flex  justify-between pt-2 px-8  border-b border-white/5 bg-[#0d0f13]/60 backdrop-blur-3xl backdrop-opacity-90">
-          <h2 className="text-2xl font-bold text-white flex gap-2 items-center">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-emerald-500 to-violet-600">
-              <Bot className="h-4 w-4 text-white" />
-            </div>
-            <span className="text-base text-white font-semibold">MS Agent</span>
-          </h2>
+        <header className="sticky top-0 z-30 w-full flex  justify-between  px-8  border-b border-white/5 bg-[#0d0f13]/60 backdrop-blur-3xl backdrop-opacity-90">
+          <img src="/logo2.webp" alt="" className="w-36 h-20 " />
           <div className="flex items-center gap-2">
             <div className="hidden lg:block mt-3">
               <Badge>
@@ -194,7 +189,7 @@ function App() {
                                   : "mt-6 mb-4  pt-2  rounded-2xl text-[#e7e5e5]"
                               }`}
                             >
-                              {m.parts?.[0]?.text?.type === "resource_link" ? (
+                              {m.parts?.[0]?.text?.type == "resource_link" ? (
                                 <a
                                   href={m.parts?.[0].text.uri}
                                   download={
