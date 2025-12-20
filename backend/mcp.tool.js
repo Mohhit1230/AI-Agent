@@ -1,12 +1,13 @@
 import { config } from "dotenv";
 import { TwitterApi } from "twitter-api-v2";
-// import { GoogleGenAI } from "@google/genai";
 import nodemailer from "nodemailer";
-import PDFDocument from 'pdfkit';
-import { PassThrough } from 'stream';
-import { marked } from 'marked';
+import PDFDocument from "pdfkit";
+import { spawn } from "child_process";
+import path from "path";
+import { fileURLToPath } from "url";
 config();
 
+//Twitter Setup
 const twitterClient = new TwitterApi({
   appKey: process.env.TWITTER_API_KEY,
   appSecret: process.env.TWITTER_API_SECRET,
@@ -29,59 +30,12 @@ export async function createPost(status) {
   };
 }
 
-// const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-// export async function chatWithAI(message) {
-//   const response = await ai.models.generateContent({
-//     model: "gemini-2.0-flash",
-//     contents: [{
-//       role: "model",
-//       parts: [{
-//         text: `Act as a highly intelligent AI assistant like ChatGPT.
-// When replying format reply in markdown with the following rules:
-
-// - Format code using proper code blocks
-// - Be conversational, clear, and smart
-// - Do NOT dump raw text walls
-// - Include emojis when appropriate
-// - Use markdown formatting (###, bullets, code blocks).
-// - Structure responses with headings, emojis,bullet points, clean formatting.
-// - Answer like ChatGPT does — no flat text walls.
-// - Format code using \`\`\`js ... \`\`\` or \`\`\`bash ... \`\`\`
-// - Avoid giant paragraphs — break things down
-// - Use break to break the text into manageable chunks
-// - Use headings, bullet points, and code blocks
-
-// Example: Don't say "okay, here it is" and vomit text.
-// Break replies cleanly, like a pro.
-
-// Act like a sarcastic, slightly abusive tech mentor named MohhitGPT.
-// Talk like a bro, but deliver code perfectly.
-// Use dark humor when needed. Don't hold back.`}]},
-//       {
-//         role: "user",
-//         parts: [{ text: message }],
-//       },
-//     ],
-//   });
-
-//   return {
-//     content: [
-//       {
-//         type: "text",
-//         text: response.candidates[0].content.parts[0].text,
-//       },
-//     ],
-//   };
-// }
-
-
-
-
+//Mail Setup
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
-    user: process.env.HOST_EMAIL,           
-    pass: process.env.HOST_PASSWORD,             
+    user: process.env.HOST_EMAIL,
+    pass: process.env.HOST_PASSWORD,
   },
 });
 
@@ -121,6 +75,7 @@ export async function sendEmail({ to, subject, text }) {
 }
 
 
+//Edit PDF Setup
 export async function editExistingPDF(fileBuffer, newText) {
   const pdfDoc = await PDFDocument.load(fileBuffer);
   const font = await pdfDoc.embedFont(StandardFonts.CourierBold);
@@ -137,59 +92,88 @@ export async function editExistingPDF(fileBuffer, newText) {
   return await pdfDoc.save();
 }
 
-function markdownToPlainText(markdown) {
-  const renderer = {
-    paragraph: (text) => text + "\n\n",
-    strong: (text) => text,
-    em: (text) => text,
-    codespan: (text) => text,
-    code: (code) => code + "\n\n",
-    heading: (text) => text + "\n\n",
-    link: (href, title, text) => `${text} (${href})`,
-    image: (href, title, text) => `[Image: ${text}] (${href})`,
-    list: (body) => body + "\n",
-    listitem: (text) => `- ${text}\n`,
-    blockquote: (text) => `> ${text}\n`,
-    hr: () => "\n----------------------\n",
-    br: () => "\n",
-    html: () => "",
-    table: () => "",
-    tablerow: () => "",
-    tablecell: () => "",
-  };
 
-  marked.use({ renderer });
-  return marked.parse(markdown);
+//GoDaddy Login
+export async function godaddy_login() {
+  return new Promise((resolve, reject) => {
+    const pyProcess = spawn("python", ["Python/Moodle.py"], {
+      stdio: ["inherit", "pipe", "pipe"],
+    });
+
+    pyProcess.stdout.on("data", (data) => {
+      console.log("Python stdout:", data.toString());
+    });
+
+    pyProcess.stderr.on("data", (data) => {
+      console.error("Python stderr:", data.toString());
+    });
+
+    pyProcess.on("close", (code) => {
+      console.log(`Python process exited with code ${code}`);
+      resolve({
+        content: [
+          {
+            type: "text",
+            text: `✅ GoDaddy script finished with exit code ${code}`,
+          },
+        ],
+      });
+    });
+
+    pyProcess.on("error", (err) => {
+      console.error("Failed to start Python script:", err);
+      reject(new Error("Failed to execute Python script"));
+    });
+  });
 }
 
-export async function generatePDFfromText(markdownText) {
+//PDF Generation
+export function generatePDF(content) {
   return new Promise((resolve, reject) => {
-    try {
-      const doc = new PDFDocument();
-      const stream = new PassThrough();
-      const chunks = [];
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const scriptPath = path.join(__dirname, "Python", "pdf.py");
 
-      doc.on('data', (chunk) => chunks.push(chunk));
-      doc.on('end', () => {
-        const buffer = Buffer.concat(chunks);
-        resolve(buffer);
-      });
+    const pyProcess = spawn("python", [scriptPath, content]);
 
-      doc.on('error', reject);
+    let output = "";
+    let errorOutput = "";
 
-      doc.pipe(stream);
-     const plainText = markdownToPlainText(markdownText);
+    pyProcess.stdout.on("data", (data) => (output += data.toString()));
+    pyProcess.stderr.on("data", (err) => (errorOutput += err.toString()));
 
-      doc.fontSize(13).fillColor('black').text(markdownText, {
-        align: 'left',
-        lineGap: 6,
-        indent: 20,
-        paragraphGap: 10,
-      });
+    pyProcess.on("close", () => {
+      if (errorOutput) {
+        console.error("Python error:", errorOutput);
+        return reject(new Error(errorOutput));
+      }
 
-      doc.end();
-    } catch (err) {
-      reject(err);
-    }
+      try {
+        const jsonData = JSON.parse(output);
+        console.log("PDF generated:", jsonData.name);
+
+        resolve({
+          content: [
+            {
+              type: "resource_link", 
+              uri: jsonData.pdf_uri,
+              name: jsonData.name,
+              mimeType: "application/pdf",
+              description: "Generated PDF from text input",
+            },
+          ],
+        });
+      } catch (err) {
+        console.error("JSON parse error in MCP tool:", err);
+        resolve({
+          content: [
+            {
+              type: "text",
+              text: "❌ Failed to parse PDF generation output",
+            },
+          ],
+        });
+      }
+    });
   });
 }

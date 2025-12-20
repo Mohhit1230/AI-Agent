@@ -14,6 +14,7 @@
     "@google/genai": "^1.8.0",
     "@modelcontextprotocol/sdk": "^1.15.0",
     "buffer": "^6.0.3",
+    "child_process": "^1.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",
@@ -23,8 +24,10 @@
     "multer": "^2.0.1",
     "nodemailer": "^7.0.4",
     "openai": "^5.12.2",
+    "path": "^0.12.7",
     "pdfkit": "^0.17.1",
     "twitter-api-v2": "^1.24.0",
+    "url": "^0.11.4",
     "zod": "^3.25.74"
   }
 }

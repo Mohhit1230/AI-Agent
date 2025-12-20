@@ -31,7 +31,7 @@ const FeaturesPanel = ({drawer}) => {
 
 
 
-     <div className="sticky top-[74px]">
+     <div className="sticky top-28">
       <Card className={`rounded-2xl ${drawer === "drawer" ? "bg-[#212121]" : "bg-gradient-to-b from-white/10 to-white/5"} `}>
         <CardHeader className="space-y-1">
           <CardTitle className="flex items-center gap-2 text-base text-white">

@@ -6,6 +6,7 @@ import FeaturesPanel from "./components/FeaturesPanel";
 import MarkdownRenderer from "./components/MarkdownRenderer ";
 import { MoveDown } from "lucide-react";
 import DrawerBasic from "./components/Drawer/Drawer";
+import Preloader from "./components/Preloader";
 
 import {
   Bot,
@@ -32,6 +33,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [isNewChat, setIsNewChat] = useState(true);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [showPreloader, setShowPreloader] = useState(true);
   const chatEndRef = useRef(null);
   const chatContainerRef = useRef(null);
   const abortControllerRef = useRef(null);
@@ -134,10 +136,13 @@ function App() {
   };
   return (
     <>
-      <div className="bg-[#0f1115] h-fit body">
+      {showPreloader && <Preloader onComplete={() => setShowPreloader(false)} />}
+      <div className={`bg-[#0f1115] h-fit body ${showPreloader ? 'h-screen overflow-hidden' : ''}`}>
         <div className=" fixed inset-0 bg-[radial-gradient(70%_60%_at_30%_0%,rgba(16,185,129,0.14),rgba(0,0,0,0)_60%),radial-gradient(60%_50%_at_80%_10%,rgba(147,51,234,0.12),rgba(0,0,0,0)_55%)]" />
-        <header className="sticky top-0 z-30 w-full flex  justify-between  px-8  border-b border-white/5 bg-[#0d0f13]/60 backdrop-blur-3xl backdrop-opacity-90">
-          <img src="/logo2.webp" alt="" className="w-36 h-20 " />
+        <nav className="sticky top-0 z-30 w-full h-18 flex  justify-between px-8  border-b border-white/5 bg-[#0d0f13]/60 backdrop-blur-3xl backdrop-opacity-90">
+          <div className="h-full w-44">
+            <img src="/logo2.webp" alt="" className="w-full h-full object-cover " />
+          </div>
           <div className="flex items-center gap-2">
             <div className="hidden lg:block mt-3">
               <Badge>
@@ -151,8 +156,8 @@ function App() {
               <DrawerBasic />
             </div>
           </div>
-        </header>
-        <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-4 px-0 md:px-4 pb-8 pt-2 lg:grid-cols-[200px_minmax(0,1fr)_300px] md:gap-6 lg:gap-8">
+        </nav>
+        <div className="mx-auto grid max-w-8xl grid-cols-1 gap-4 px-0 md:px-4 pb-8 pt-2 lg:grid-cols-[200px_minmax(0,1fr)_300px] md:gap-6 lg:gap-8">
           <aside className="hidden lg:block">
             <Options method={deleteHistory} />
           </aside>

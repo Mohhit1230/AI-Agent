@@ -7,7 +7,7 @@ import {
 export const Options = ({method}) => {
   return (
     <div
-              className="sticky top-[74px] space-y-4"
+              className="fixed top-28 space-y-4"
               onClick={method}
             >
               <Button

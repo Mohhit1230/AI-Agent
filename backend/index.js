@@ -11,8 +11,9 @@ import { z } from "zod";
 import {
   createPost,
   sendEmail,
-  generatePDFfromText,
   editExistingPDF,
+  godaddy_login,
+  generatePDF,
 } from "./mcp.tool.js";
 import multer from "multer";
 import { Buffer } from "buffer";
@@ -66,9 +67,6 @@ mcpServer.tool(
   })
 );
 
-// mcpServer.tool("Chatting", "Chat with Mohhit", {
-//   message: z.string()
-// }, async ({ message }) => chatWithAI(message));
 
 mcpServer.tool(
   "createPost",
@@ -78,10 +76,59 @@ mcpServer.tool(
   },
   async ({ status }) => createPost(status)
 );
+mcpServer.tool(
+  "godaddyLogin",
+  "It will login to godaddy",
+  {},
+  async () => godaddy_login()
+);
+
+
+// mcpServer.tool(
+//   "divetopool",
+//   "dive into pool with content",
+//   {
+//     text: z.string(),
+//   },
+//   async ({ text }) => {
+//     // Wrap in list so Python gets [{"type": "text", "text": "..."}]
+//     const payload = JSON.stringify([{ type: "text", text }]);
+//     return await generatePDF(payload);
+//   }
+// );
+
+
+mcpServer.tool(
+  "givemePDF",
+  "Generate a PDF from text",
+  {
+    text: z.string(),
+  },
+  async ({ text }) => {
+    // Wrap text in array as expected by Python: [{"type":"text","text":"..."}]
+    const payload = JSON.stringify([{ type: "text", text }]);
+    try {
+      const result = await generatePDF(payload);
+      return result; // MCP expects { content: [...] }
+    } catch (err) {
+      console.error("Error generating PDF:", err);
+      return {
+        content: [
+          {
+            type: "text",
+            text: "❌ Failed to generate PDF",
+          },
+        ],
+      };
+    }
+  }
+);
+
+
 
 mcpServer.tool(
   "sendEmail",
-  "Send an Email",
+  "Sends an Email to the specified address",
   {
     to: z.string(),
     subject: z.string(),
@@ -90,38 +137,6 @@ mcpServer.tool(
   async ({ to, subject, text }) => sendEmail({ to, subject, text })
 );
 
-mcpServer.tool(
-  "generatePdf",
-  "Generate a PDF from plain text",
-  {
-    text: z.string(),
-  },
-  async ({ text }) => {
-    if (typeof text !== "string" || !text.trim()) {
-      throw new Error("Text input is required to generate a PDF.");
-    }
-    const buffer = await generatePDFfromText(text);
-    if (!buffer || !Buffer.isBuffer(buffer)) {
-      throw new Error("PDF generation failed. Buffer is invalid.");
-    }
-
-    const base64 = buffer.toString("base64"); 
-    const downloadUrl = `data:application/pdf;base64,${base64}`;
-    const fileName = `${Date.now()}.pdf`;
-
-    return {
-      content: [
-        {
-          type: "resource_link",
-          uri: downloadUrl,
-          name: fileName,
-          mimeType: "application/pdf",
-          description: "Generated PDF file",
-        },
-      ],
-    };
-  }
-);
 mcpServer.tool(
   "editPDF",
   "Edit uploaded PDF and add text",
@@ -438,7 +453,7 @@ app.post("/chat", async (req, res) => {
     }));
 
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash",
+      model: "gemini-2.5-flash",
       contents: messages,
       config: { tools: [{ functionDeclarations: tools }] },
     });
@@ -453,7 +468,7 @@ app.post("/chat", async (req, res) => {
       });
       const content = toolResult.content;
 
-      console.log("Tool result content: ", content);
+      console.log("Tool result content: ", content).substring(0, 100);
 
       return res.json({ data: content || "Empty tool result" });
     }
