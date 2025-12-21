@@ -194,20 +194,23 @@ function App() {
                                   : "mt-6 mb-4  pt-2  rounded-2xl text-[#e7e5e5]"
                               }`}
                             >
-                              {m.parts?.[0]?.text?.type == "resource_link" ? (
+                              {m.parts?.[0]?.text?.type == "resource_link" || m.parts?.[1]?.text?.type == "image"  ? (
                                 <a
-                                  href={m.parts?.[0].text.uri}
-                                  download={
-                                    m.parts?.[0].text.name || "output.pdf"
-                                  }
+                                  href={m.parts?.[0].text.uri || m.parts?.[1].text.data}
+                                  download=
+                                    {m.parts?.[0]?.text?.type == "resource_link" ?( m.parts?.[0].text.name || "output.pdf") : ("FileOutput.png")}                          
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="text-gray-200 ml-2"
                                 >
-                                  Now you can download your PDF :{" "}
+                                   {m.parts?.[0]?.text?.type == "resource_link" || m.parts?.[1]?.text?.type == "image" ? (<div>Now you can download your PDF :{" "}
                                   <span className="text-blue-400 hover:text-blue-500">
                                     📄{m.parts?.[0].text.name || "your PDF"}
-                                  </span>
+                                  </span></div>) : (<div>Now you can download your image :{" "}
+                                  <span className="text-blue-400 hover:text-blue-500">
+                                    📄{m.parts?.[0].text.name || "your image"}
+                                  </span></div>)}
+                                  
                                 </a>
                               ) : (
                                 <div className="flex flex-col gap-2">

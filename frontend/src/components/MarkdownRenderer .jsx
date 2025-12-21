@@ -46,8 +46,8 @@ const MarkdownRenderer = ({ content }) => {
               {children}
             </li>
           ),
-           code: ({ inline, className, children, ...props }) => {
-       
+          code: ({ inline, className, children, ...props }) => {
+
             return inline ? (
               <code className=" text-zinc-300 px-1 pb-1 rounded" {...props}>
                 {children}
@@ -58,9 +58,9 @@ const MarkdownRenderer = ({ content }) => {
                 {...props}
               >
                 {children}
-                
+
               </code>
-              
+
             );
           },
           pre: ({ children }) => {
@@ -73,7 +73,7 @@ const MarkdownRenderer = ({ content }) => {
                 {/* 🏷️ Language Label */}
                 <div className="relative px-4 py-1 text-xs font-mono bg-white/5 text-zinc-400 border-b border-zinc-700 tracking-wider">
                   <span>{language}</span>
-                  <CopyButton text={`\`\`\`${content.split("```")[1]}\`\`\``} user="" model="assistant"  />
+                  <CopyButton text={`\`\`\`${content.split("```")[1]}\`\`\``} user="" model="assistant" />
                 </div>
 
                 {/* 💻 Actual Code Block */}
@@ -83,14 +83,14 @@ const MarkdownRenderer = ({ content }) => {
               </div>
             );
           },
-         
+
           p: ({ node, ...props }) => {
             const isInsideList = node?.parent?.tagName === "li";
             return (
               <p
                 className={
                   isInsideList
-                    ? "" 
+                    ? ""
                     : "mb-3 leading-relaxed text-gray-100 text-xs tracking-wide"
                 }
                 {...props}
@@ -108,10 +108,25 @@ const MarkdownRenderer = ({ content }) => {
               {children}
             </a>
           ),
+          img: ({ src, alt, ...props }) => (
+            <div className="my-4 rounded-xl overflow-hidden border border-white/10 shadow-2xl">
+              <img
+                src={src}
+                alt={alt}
+                className="w-full h-auto object-contain max-h-[500px]"
+                {...props}
+              />
+              {alt && alt !== 'screenshot' && (
+                <div className="px-4 py-2 bg-white/5 text-[10px] text-zinc-400 italic border-t border-white/5">
+                  {alt}
+                </div>
+              )}
+            </div>
+          ),
 
         }}
       >
-          {typeof content === 'string' ? content : JSON.stringify(content)}
+        {typeof content === 'string' ? content : JSON.stringify(content)}
       </ReactMarkdown>
     </div>
   );

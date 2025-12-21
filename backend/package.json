@@ -26,6 +26,9 @@
     "openai": "^5.12.2",
     "path": "^0.12.7",
     "pdfkit": "^0.17.1",
+    "playwright": "^1.57.0",
+    "playwright-extra": "^4.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "twitter-api-v2": "^1.24.0",
     "url": "^0.11.4",
     "zod": "^3.25.74"
