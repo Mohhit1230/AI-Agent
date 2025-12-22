@@ -24,7 +24,7 @@ export const Options = ({method}) => {
                 <div className="flex items-center justify-between gap-4 p-4 px-3">
                   <span className="text-xs text-neutral-400">Model</span>
                   <span className="w-full text-amber-300 items-center rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs">
-                    Gemini-1.5-flash
+                    Gemini-2.5-flash
                   </span>
                 </div>
               </div>

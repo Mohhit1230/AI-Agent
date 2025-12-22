@@ -97,39 +97,7 @@ export async function editExistingPDF(fileBuffer, newText) {
 }
 
 
-//GoDaddy Login
-export async function godaddy_login() {
-  return new Promise((resolve, reject) => {
-    const pyProcess = spawn("python", ["Python/Moodle.py"], {
-      stdio: ["inherit", "pipe", "pipe"],
-    });
 
-    pyProcess.stdout.on("data", (data) => {
-      console.log("Python stdout:", data.toString());
-    });
-
-    pyProcess.stderr.on("data", (data) => {
-      console.error("Python stderr:", data.toString());
-    });
-
-    pyProcess.on("close", (code) => {
-      console.log(`Python process exited with code ${code}`);
-      resolve({
-        content: [
-          {
-            type: "text",
-            text: `✅ GoDaddy script finished with exit code ${code}`,
-          },
-        ],
-      });
-    });
-
-    pyProcess.on("error", (err) => {
-      console.error("Failed to start Python script:", err);
-      reject(new Error("Failed to execute Python script"));
-    });
-  });
-}
 
 //PDF Generation
 export function generatePDF(content) {
@@ -270,7 +238,7 @@ export async function browser_navigate(url) {
     });
 
     const title = await page.title();
-  
+
 
     return {
       content: [
@@ -307,7 +275,7 @@ export async function browser_screenshot(url) {
     }
 
     const screenshot = await page.screenshot({ fullPage: true });
-    
+
     return {
       content: [
         {
@@ -388,7 +356,7 @@ export async function browser_search(query) {
     });
 
     const pageTitle = await page.title();
-    
+
 
     if (results.length === 0) {
       return {

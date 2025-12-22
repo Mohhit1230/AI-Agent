@@ -12,7 +12,7 @@ import {
   createPost,
   sendEmail,
   editExistingPDF,
-  godaddy_login,
+
   generatePDF,
   browser_navigate,
   browser_screenshot,
@@ -39,7 +39,7 @@ app.use((req, res, next) => {
   if (req.path === "/messages") {
     return next();
   }
-  express.json({limit: "50mb"})(req, res, next);
+  express.json({ limit: "50mb" })(req, res, next);
 });
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -83,12 +83,7 @@ mcpServer.tool(
   },
   async ({ status }) => createPost(status)
 );
-mcpServer.tool(
-  "godaddyLogin",
-  "It will login to godaddy",
-  {},
-  async () => godaddy_login()
-);
+
 
 
 // mcpServer.tool(
@@ -540,7 +535,7 @@ app.post("/chat", async (req, res) => {
     }));
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-2.5-flash",
       contents: messages,
       config: { tools: [{ functionDeclarations: tools }] },
     });

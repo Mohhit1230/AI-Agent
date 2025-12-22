@@ -34,6 +34,8 @@ function App() {
   const [isNewChat, setIsNewChat] = useState(true);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [showPreloader, setShowPreloader] = useState(true);
+  const [previewImage, setPreviewImage] = useState(null);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const chatEndRef = useRef(null);
   const chatContainerRef = useRef(null);
   const abortControllerRef = useRef(null);
@@ -148,7 +150,7 @@ function App() {
               <Badge>
                 Model:{" "}
                 <span className="ml-1 font-medium text-emerald-300">
-                  Gemini-1.5-flash
+                  Gemini-2.5-flash
                 </span>
               </Badge>
             </div>
@@ -194,32 +196,154 @@ function App() {
                                   : "mt-6 mb-4  pt-2  rounded-2xl text-[#e7e5e5]"
                               }`}
                             >
-                              {m.parts?.[0]?.text?.type == "resource_link" || m.parts?.[1]?.text?.type == "image"  ? (
-                                <a
-                                  href={m.parts?.[0].text.uri || m.parts?.[1].text.data}
-                                  download=
-                                    {m.parts?.[0]?.text?.type == "resource_link" ?( m.parts?.[0].text.name || "output.pdf") : ("FileOutput.png")}                          
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-gray-200 ml-2"
-                                >
-                                   {m.parts?.[0]?.text?.type == "resource_link" || m.parts?.[1]?.text?.type == "image" ? (<div>Now you can download your PDF :{" "}
-                                  <span className="text-blue-400 hover:text-blue-500">
-                                    📄{m.parts?.[0].text.name || "your PDF"}
-                                  </span></div>) : (<div>Now you can download your image :{" "}
-                                  <span className="text-blue-400 hover:text-blue-500">
-                                    📄{m.parts?.[0].text.name || "your image"}
-                                  </span></div>)}
-                                  
-                                </a>
-                              ) : (
-                                <div className="flex flex-col gap-2">
-                                  {m.role === "model" && (<Bot className="h-4 w-4 text-green-500" />)}
-                                  <MarkdownRenderer
-                                    content={m.parts?.[0]?.text}
-                                  />
-                                </div>
-                              )}
+                              {(() => {
+                                const text = m.parts?.[0]?.text;
+                                
+                                // Check if it's a resource_link object (PDF)
+                                if (text?.type === "resource_link") {
+                                  return (
+                                    <div className="flex flex-col gap-3">
+                                      <div className="w-full h-80 rounded-xl overflow-hidden border border-white/10 bg-white/5 relative group/pdf">
+                                        <iframe
+                                          src={`${text.uri}#toolbar=0&navpanes=0&scrollbar=0`}
+                                          className="w-full h-full pointer-events-none"
+                                          title="PDF Preview"
+                                        />
+                                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/pdf:opacity-100 transition-opacity">
+                                          <a
+                                            href={text.uri}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="px-4 py-2 bg-emerald-500 text-white rounded-full text-sm font-medium flex items-center gap-2 hover:bg-emerald-600 transition-colors"
+                                          >
+                                            <FileText className="h-4 w-4" /> View Full PDF
+                                          </a>
+                                        </div>
+                                      </div>
+                                      <a
+                                        href={text.uri}
+                                        download={text.name || "output.pdf"}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-gray-200 ml-2"
+                                      >
+                                        <div className="flex items-center gap-2">
+                                          <span className="text-blue-400 hover:text-blue-500 font-medium">
+                                            📄 {text.name || "your PDF"}
+                                          </span>
+                                          <span className="text-[10px] text-neutral-500">(Click to download)</span>
+                                        </div>
+                                      </a>
+                                    </div>
+                                  );
+                                }
+                                
+                                // Check if it's an image object
+                                if (text?.type === "image") {
+                                  return (
+                                    <div className="flex flex-col gap-2">
+                                      <div 
+                                        className="cursor-pointer group relative overflow-hidden rounded-lg border border-white/10"
+                                        onClick={() => {
+                                          setPreviewImage(text.data);
+                                          setIsImageModalOpen(true);
+                                        }}
+                                      >
+                                        <img 
+                                          src={text.data} 
+                                          alt={text.name || "Screenshot"} 
+                                          className="max-w-full transition-transform duration-300 group-hover:scale-[1.02]"
+                                        />
+                                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                          <Zap className="h-6 w-6 text-white drop-shadow-lg" />
+                                        </div>
+                                      </div>
+                                      <a
+                                        href={text.data}
+                                        download={text.name || "screenshot.png"}
+                                        className="text-blue-400 hover:text-blue-500 text-sm font-medium ml-1"
+                                      >
+                                        📥 Download Image
+                                      </a>
+                                    </div>
+                                  );
+                                }
+                                
+                                // Check if it's a base64 image string (data:image/...)
+                                if (typeof text === "string" && text.startsWith("data:image/")) {
+                                  return (
+                                    <div className="flex flex-col gap-2 mb-3">
+                                      <div 
+                                        className="cursor-pointer group relative overflow-hidden rounded-lg border border-white/10"
+                                        onClick={() => {
+                                          setPreviewImage(text);
+                                          setIsImageModalOpen(true);
+                                        }}
+                                      >
+                                        <img 
+                                          src={text} 
+                                          alt="Screenshot" 
+                                          className="max-w-full transition-transform duration-300 group-hover:scale-[1.02]"
+                                        />
+                                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                          <Zap className="h-6 w-6 text-white drop-shadow-lg" />
+                                        </div>
+                                      </div>
+                                      <a
+                                        href={text}
+                                        download="screenshot.png"
+                                        className="text-blue-400 hover:text-blue-500 text-sm font-medium ml-1"
+                                      >
+                                        📥 Download Image
+                                      </a>
+                                    </div>
+                                  );
+                                }
+                                
+                                // Check if text contains both description and base64 image
+                                if (typeof text === "string" && text.includes("data:image/")) {
+                                  const parts = text.split(/\n\n(data:image\/[^"'\s]+)/);
+                                  if (parts.length > 1) {
+                                    return (
+                                      <div className="flex flex-col gap-2">
+                                        {m.role === "model" && <Bot className="h-4 w-4 text-green-500" />}
+                                        {parts[0] && <MarkdownRenderer content={parts[0]} />}
+                                        <div 
+                                          className="cursor-pointer group relative overflow-hidden rounded-lg border border-white/10 mt-2"
+                                          onClick={() => {
+                                            setPreviewImage(parts[1]);
+                                            setIsImageModalOpen(true);
+                                          }}
+                                        >
+                                          <img 
+                                            src={parts[1]} 
+                                            alt="Screenshot" 
+                                            className="max-w-full transition-transform duration-300 group-hover:scale-[1.02]"
+                                          />
+                                          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                            <Zap className="h-6 w-6 text-white drop-shadow-lg" />
+                                          </div>
+                                        </div>
+                                        <a
+                                          href={parts[1]}
+                                          download="screenshot.png"
+                                          className="text-blue-400 hover:text-blue-500 text-sm font-medium ml-1"
+                                        >
+                                          📥 Download Image
+                                        </a>
+                                      </div>
+                                    );
+                                  }
+                                }
+                                
+                                // Default: render as markdown
+                                return (
+                                  <div className="flex flex-col gap-2">
+                                    {m.role === "model" && <Bot className="h-4 w-4 text-green-500" />}
+                                    <MarkdownRenderer content={text} />
+                                  </div>
+                                );
+                              })()}
 
                               <CopyButton
                                 text={m.parts?.[0]?.text || ""}
@@ -297,6 +421,39 @@ function App() {
         )}
         </div>
       </div>
+
+      {/* Image Modal Overlay */}
+      {isImageModalOpen && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md transition-all duration-300 animate-in fade-in"
+          onClick={() => setIsImageModalOpen(false)}
+        >
+          <div className="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center">
+             <button 
+              className="absolute -top-12 right-0 text-white/70 hover:text-white transition-colors p-2"
+              onClick={() => setIsImageModalOpen(false)}
+            >
+              <Zap className="h-8 w-8 rotate-45" />
+            </button>
+            <img 
+              src={previewImage} 
+              alt="Full Preview" 
+              className="max-w-full max-h-full rounded-2xl shadow-2xl border border-white/10 object-contain animate-in zoom-in-95 duration-300"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <div className="mt-4 flex gap-4">
+              <a
+                href={previewImage}
+                download="preview.png"
+                className="px-6 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full font-medium transition-colors shadow-lg shadow-emerald-500/20"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Download Image
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
