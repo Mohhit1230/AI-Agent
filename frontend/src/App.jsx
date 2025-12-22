@@ -21,6 +21,7 @@ import {
   Sparkles,
   Twitter,
   Zap,
+  Trash2,
 } from "lucide-react";
 
 import { Badge } from "./components/ui/Badge";
@@ -135,6 +136,15 @@ function App() {
     setHistory([]);
     setIsNewChat(true);
     localStorage.removeItem("chatHistory");
+  };
+
+  const deleteMessage = (index) => {
+    const updatedHistory = history.filter((_, i) => i !== index);
+    setHistory(updatedHistory);
+    localStorage.setItem("chatHistory", JSON.stringify(updatedHistory));
+    if (updatedHistory.length === 0) {
+      setIsNewChat(true);
+    }
   };
   return (
     <>
@@ -345,11 +355,20 @@ function App() {
                                 );
                               })()}
 
-                              <CopyButton
-                                text={m.parts?.[0]?.text || ""}
-                                user={m.role}
-                                pdf={m.parts?.[0]?.text?.type}
-                              />
+                                  <div className={`absolute ${m.role === "model" ? "left-1 -bottom-5" : "right-0 -bottom-9"} flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10`}>
+                                <CopyButton
+                                  text={m.parts?.[0]?.text || ""}
+                                  user={m.role}
+                                  pdf={m.parts?.[0]?.text?.type}
+                                />
+                                <button
+                                  onClick={() => deleteMessage(i)}
+                                  className="p-1.5 rounded-lg bg-[#1a1d21] border border-white/10 text-neutral-400 hover:text-red-400 hover:bg-neutral-800 transition-all duration-200"
+                                  title="Delete message"
+                                >
+                                  <Trash2 className="h-3.5 w-3.5" />
+                                </button>
+                              </div>
                             </div>
                           </li>
                         ))}
