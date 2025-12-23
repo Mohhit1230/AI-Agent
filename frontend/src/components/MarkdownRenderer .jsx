@@ -10,7 +10,7 @@ const MarkdownRenderer = ({ content }) => {
         rehypePlugins={[rehypeHighlight]}
         components={{
           h1: ({ ...props }) => (
-            <h1 className="text-3xl font-bold mt-6 mb-2" {...props} />
+            <h1 className="text-3xl font-bold mt-6 mb-2 " {...props} />
           ),
           h2: ({ ...props }) => (
             <h2 className="text-2xl font-semibold mt-5 mb-2" {...props} />
@@ -91,7 +91,7 @@ const MarkdownRenderer = ({ content }) => {
                 className={
                   isInsideList
                     ? ""
-                    : "mb-3 leading-relaxed text-gray-100 text-xs tracking-wide"
+                    : "mb-3  tracking-wider font-extralight leading-relaxed text-gray-100 text-xs"
                 }
                 {...props}
               />

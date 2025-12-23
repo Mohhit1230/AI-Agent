@@ -213,9 +213,17 @@ function humanDelay(min = 1000, max = 3000) {
   return new Promise(r => setTimeout(r, Math.random() * (max - min) + min));
 }
 
-export async function browser_navigate(url) {
+async function getActivePage() {
   const context = await getPersistentContext();
-  const page = await context.newPage();
+  const pages = context.pages();
+  if (pages.length > 0) {
+    return pages[0]; // Reuse the first page for consistency
+  }
+  return await context.newPage();
+}
+
+export async function browser_navigate(url) {
+  const page = await getActivePage();
   try {
     // Navigate with a more relaxed wait condition
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60000 });
@@ -249,7 +257,6 @@ export async function browser_navigate(url) {
       ],
     };
   } catch (error) {
-    if (!page.isClosed()) await page.close();
     return {
       content: [
         {
@@ -262,13 +269,14 @@ export async function browser_navigate(url) {
 }
 
 export async function browser_screenshot(url) {
-  const context = await getPersistentContext();
-  const page = await context.newPage();
+  const page = await getActivePage();
   try {
-    await page.goto(url, { waitUntil: "networkidle", timeout: 45000 });
+    if (url) {
+      await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45000 });
+      await humanDelay(2000, 3000);
+    }
 
     if (await detectCaptcha(page)) {
-      await page.close();
       return {
         content: [{ type: "text", text: "⚠️ CAPTCHA Detected! Solve it in the browser window first." }]
       };
@@ -290,7 +298,6 @@ export async function browser_screenshot(url) {
       ],
     };
   } catch (error) {
-    await page.close();
     return {
       content: [
         {
@@ -303,8 +310,7 @@ export async function browser_screenshot(url) {
 }
 
 export async function browser_search(query) {
-  const context = await getPersistentContext();
-  const page = await context.newPage();
+  const page = await getActivePage();
   try {
     await humanDelay(1500, 3000);
     const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
@@ -380,24 +386,22 @@ export async function browser_search(query) {
 }
 
 export async function browser_click(selector) {
-  const context = await getPersistentContext();
-  const page = await context.newPage();
+  const page = await getActivePage();
   try {
-    // We assume the user wants to click on the currently "active" page if possible, 
-    // but without a way to track "current page" easily in MCP stateless calls, 
-    // we might need a way to target URL or just use the last opened page.
-    // For now, let's keep it simple: most interactions involve navigation first.
-    // However, the agent usually navigates, then clicks.
-    // To solve the "which page" issue, we'll try to find an open page with content.
-    const pages = context.pages();
-    const targetPage = pages.length > 0 ? pages[pages.length - 1] : page;
+    await page.waitForSelector(selector, { timeout: 15000 });
 
-    await targetPage.waitForSelector(selector, { timeout: 15000 });
-    await targetPage.click(selector);
-    await humanDelay(1000, 2000);
+    // Smooth scroll to element
+    await page.evaluate((sel) => {
+      const el = document.querySelector(sel);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, selector);
+    await humanDelay(500, 1000);
+
+    await page.click(selector);
+    await humanDelay(2000, 4000);
 
     return {
-      content: [{ type: "text", text: `Successfully clicked "${selector}"` }]
+      content: [{ type: "text", text: `Successfully clicked "${selector}". Current URL: ${page.url()}` }]
     };
   } catch (error) {
     return {
@@ -407,15 +411,10 @@ export async function browser_click(selector) {
 }
 
 export async function browser_type(selector, text) {
-  const context = await getPersistentContext();
-  const pages = context.pages();
-  const targetPage = pages.length > 0 ? pages[pages.length - 1] : null;
-
-  if (!targetPage) return { content: [{ type: "text", text: "❌ No open browser page found." }] };
-
+  const page = await getActivePage();
   try {
-    await targetPage.waitForSelector(selector, { timeout: 15000 });
-    await targetPage.fill(selector, text);
+    await page.waitForSelector(selector, { timeout: 15000 });
+    await page.fill(selector, text);
     await humanDelay(500, 1000);
     return {
       content: [{ type: "text", text: `Successfully typed into "${selector}"` }]
@@ -428,17 +427,12 @@ export async function browser_type(selector, text) {
 }
 
 export async function browser_press_key(key) {
-  const context = await getPersistentContext();
-  const pages = context.pages();
-  const targetPage = pages.length > 0 ? pages[pages.length - 1] : null;
-
-  if (!targetPage) return { content: [{ type: "text", text: "❌ No open browser page found." }] };
-
+  const page = await getActivePage();
   try {
-    await targetPage.keyboard.press(key);
+    await page.keyboard.press(key);
     await humanDelay(1000, 2000);
     return {
-      content: [{ type: "text", text: `Successfully pressed key "${key}"` }]
+      content: [{ type: "text", text: `Successfully pressed key "${key}". Current URL: ${page.url()}` }]
     };
   } catch (error) {
     return {
@@ -448,14 +442,12 @@ export async function browser_press_key(key) {
 }
 
 export async function browser_wait_for(selector, timeout = 30000) {
-  const context = await getPersistentContext();
-  const pages = context.pages();
-  const targetPage = pages.length > 0 ? pages[pages.length - 1] : null;
-
-  if (!targetPage) return { content: [{ type: "text", text: "❌ No open browser page found." }] };
-
+  const page = await getActivePage();
   try {
-    await targetPage.waitForSelector(selector, { timeout });
+    await page.waitForSelector(selector, { timeout });
+    return {
+      content: [{ type: "text", text: `Selector "${selector}" is now visible.` }]
+    };
     return {
       content: [{ type: "text", text: `Selector "${selector}" is now visible.` }]
     };

@@ -178,7 +178,7 @@ function App() {
 
           <main
             ref={chatContainerRef}
-            className="rounded-2xl  relative w-full min-h-0 flex flex-col flex-1 "
+            className="rounded-2xl relative w-full min-h-0 flex flex-col flex-1 "
           >
             <div className="flex relative w-full min-h-0 flex-1 h-[78dvh] md:h-[84dvh] lg:h-[86dvh] flex-col">
               {/* <header className="flex items-center justify-between border-b border-white/5 px-4 py-4">
@@ -195,17 +195,17 @@ function App() {
                         {history.map((m, i) => (
                           <li
                             key={i}
-                            className={`flex w-full ${
+                            className={`flex  w-full ${
                               m.role === "user"
                                 ? "justify-end"
                                 : "justify-start"
                             }`}
                           >
                             <div
-                              className={`relative max-w-[100%] group ${
+                              className={`relative max-w-[100%] tracking-wider group ${
                                 m.role === "user"
-                                  ? "border border-white/10 bg-white/10 text-[#e7e5e5] shadow rounded-2xl px-3 pt-2 break-words whitespace-pre-wrap"
-                                  : "mt-6 mb-4  pt-2  rounded-2xl text-[#e7e5e5]"
+                                  ? " bg-[#282a2c] text-[#e7e5e5] shadow rounded-2xl px-3 pt-2 break-words whitespace-pre-wrap"
+                                  : "mt-6 mb-4  pt-2  rounded-2xl text-[#e7e5e5] "
                               }`}
                             >
                               {(() => {
@@ -388,7 +388,7 @@ function App() {
               </div>
             </div>
        
-              <div className="w-[97%] max-w-[798px] lg:w-[52%] xl:w-[52%] self-center fixed bottom-8 lg:ml-1 mx-auto mb-0 max-h-40 flex items-center gap-2 rounded-full border border-white/10 bg-[#12151b] p-2">
+              <div className="w-[97%] max-w-[798px] lg:w-[52%] xl:w-[52%] z-30 self-center fixed bottom-8 lg:ml-1 mx-auto mb-0 max-h-40 flex items-center gap-2 rounded-full border border-white/10 bg-[#12151b] p-2">
                 <textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}

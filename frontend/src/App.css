@@ -29,9 +29,8 @@ body {
 
 
 * {
-  font-family: "Segoe UI Emoji";
+  font-family: "Mulish", sans-serif;
+  font-optical-sizing: auto;
   scroll-behavior: smooth;
-  text-wrap: wrap;
-  word-wrap: break-word;
   box-sizing: border-box;
 }

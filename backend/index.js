@@ -165,9 +165,9 @@ mcpServer.tool(
 
 mcpServer.tool(
   "browserScreenshot",
-  "Take a screenshot of a website",
+  "Take a screenshot of a specific URL or the current active page if no URL is provided",
   {
-    url: z.string().url(),
+    url: z.string().url().optional(),
   },
   async ({ url }) => browser_screenshot(url)
 );
@@ -265,6 +265,9 @@ const mcpClient = new Client({ name: "client-proxy", version: "1.0.0" });
 app.post("/chat", async (req, res) => {
   try {
     let { messages } = req.body;
+    console.log("--- New Chat Request ---");
+    const lastMessage = messages[messages.length - 1]?.parts?.[0]?.text;
+
     // ✅ Ensure messages exist and have valid parts
     if (!Array.isArray(messages)) {
       return res.status(400).json({ error: "Invalid messages format" });
@@ -356,17 +359,15 @@ app.post("/chat", async (req, res) => {
 
 
 ## WEB AGENT & BROWSER PROTOCOL
-- You have powerful browser tools: \`browserSearch\`, \`browserNavigate\`, \`browserClick\`, \`browserType\`, and \`browserPressKey\`.
-- For tasks like **ordering, purchasing, or booking**, do NOT stop after just searching.
-- **Workflow for Ordering**:
-  1. \`browserSearch\` to find the product.
-  2. \`browserNavigate\` to the specific store page (e.g. Flipkart).
-  3. \`browserClick\` the "Buy Now" or "Add to Cart" button.
-  4. \`browserType\` login/address info if necessary (or ask the user to fill it).
-  5. Continue until the order is placed or a manual payment/OTP is required.
-- **Be Proactive**: If you see a button you need to click, use \`browserClick\`. If you need to input text, use \`browserType\`.
-- **Handling Blockers**: If you hit a CAPTCHA, inform the user: "⚠️ Please solve the CAPTCHA in the browser window so I can continue."
-- **Persistent Goal**: Your job is to finish the task, not just report search results.
+- You have powerful browser tools: \`browserSearch\`, \`browserNavigate\`, \`browserClick\`, \`browserType\`, \`browserPressKey\`, and \`browserWaitFor\`.
+- **Proactive Automation**: When a user asks for a task (e.g., "Order an iPhone", "Book a flight", "Analyze a website"), DO NOT just search. Start the automation immediately.
+- **Workflow for Browser Tasks**:
+  1. \`browserSearch\` or \`browserNavigate\` to the site.
+  2. Perform sequential actions (\`browserClick\`, \`browserType\`) to progress toward the goal.
+  3. **DO NOT STOP** early. Continue until you reach a point where user input is absolutely required (e.g., payment, OTP, specific personal info you don't have).
+- **Final Action**: Always finish with a \`browserScreenshot\` call of the final page so the user can see where you stopped.
+- **Persistent State**: The browser remains open. You are working in a single persistent tab.
+- **Self-Correction**: If a selector fails, try to find a better one or reload the page.
 `,
         },
       ],
@@ -534,47 +535,90 @@ app.post("/chat", async (req, res) => {
       },
     }));
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: messages,
-      config: { tools: [{ functionDeclarations: tools }] },
-    });
+    let currentMessages = [...messages];
+    let loopCount = 0;
+    const MAX_LOOPS = 10;
+    let lastToolResult = null;
 
-    const part = response?.candidates?.[0]?.content?.parts?.[0];
-    console.log("Calling tool first: ", part);
-    if (part?.functionCall) {
-      // console.log("Calling tool: ", part?.functionCall);
-      const toolResult = await mcpClient.callTool({
-        name: part.functionCall.name,
-        arguments: part.functionCall.args,
+    while (loopCount < MAX_LOOPS) {
+      if (loopCount > 0) await new Promise(r => setTimeout(r, 1000));
+
+      const response = await ai.models.generateContent({
+        model: "gemini-2.0-flash-exp",
+        contents: currentMessages,
+        config: { tools: [{ functionDeclarations: tools }] }
       });
-      const content = toolResult.content;
-      console.log("Tool result content: ", content);
 
-      // Process tool results for the frontend
-      if (Array.isArray(content)) {
-        // 1. Handle Resource Links (PDFs)
-        const resourceLink = content.find(c => c.type === "resource_link");
-        if (resourceLink) return res.json({ data: { text: resourceLink } });
+      const candidate = response?.candidates?.[0];
+      const part = candidate?.content?.parts?.[0];
 
-        // 2. Handle Images (Screenshots)
-        const imagePart = content.find(c => c.type === "image");
-        if (imagePart) {
-          const markdownImage = `data:${imagePart.mimeType};base64,${imagePart.data}`;
-          // Also try to find description text to accompany the image
-          const descText = content.find(c => c.type === "text" && !c.text.includes("taken successfully"))?.text || "";
-          return res.json({ data: { text: descText ? `${descText}\n\n${markdownImage}` : markdownImage } });
-        }
-
-        // 3. Handle Regular Text
-        const firstText = content.find(c => c.type === "text");
-        if (firstText) return res.json({ data: { text: firstText.text } });
+      if (!part) {
+        return res.json({ data: { text: "No response from Gemini" } });
       }
 
-      return res.json({ data: content || "Empty tool result" });
+      // Add model's response to history
+      currentMessages.push(candidate.content);
+
+      if (part.functionCall) {
+        const toolCall = part.functionCall;
+        console.log(`[Loop ${loopCount}] calling tool: `, toolCall.name);
+        console.log(`[Loop ${loopCount}] tool arguments: `, JSON.stringify(toolCall.args, null, 2));
+
+        try {
+          const toolResult = await mcpClient.callTool({
+            name: toolCall.name,
+            arguments: toolCall.args,
+          });
+
+          lastToolResult = toolResult.content;
+          console.log(`[Loop ${loopCount}] tool result: `, JSON.stringify(toolResult.content, null, 2));
+
+          // Format tool response for Gemini
+          currentMessages.push({
+            role: "function",
+            parts: [{
+              functionResponse: {
+                name: toolCall.name,
+                response: { content: toolResult.content }
+              }
+            }]
+          });
+        } catch (err) {
+          console.error(`[Loop ${loopCount}] Tool call failed:`, err);
+          currentMessages.push({
+            role: "function",
+            parts: [{
+              functionResponse: {
+                name: toolCall.name,
+                response: { error: err.message }
+              }
+            }]
+          });
+        }
+        loopCount++;
+      } else {
+        // Final text response
+        let responseData = { text: part.text };
+
+        // Attach screenshot if it was the last tool call or if we stopped
+        if (lastToolResult && Array.isArray(lastToolResult)) {
+          const imagePart = lastToolResult.find(c => c.type === "image");
+          if (imagePart) {
+            const markdownImage = `data:${imagePart.mimeType};base64,${imagePart.data}`;
+            responseData.text = `${responseData.text}\n\n${markdownImage}`;
+          }
+
+          const resourceLink = lastToolResult.find(c => c.type === "resource_link");
+          if (resourceLink) {
+            responseData.text = resourceLink;
+          }
+        }
+
+        return res.json({ data: responseData });
+      }
     }
 
-    return res.json({ data: part || "No response from Gemini" });
+    return res.json({ data: { text: "⚠️ Maximum automation steps reached. Please check the browser window." } });
   } catch (err) {
     console.log("❌ Proxy error:", err);
     if (err.status === 429 || err.message?.includes("429")) {

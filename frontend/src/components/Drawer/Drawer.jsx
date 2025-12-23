@@ -50,13 +50,17 @@ const DrawerBasic = () => {
         <span className="text-sm font-medium text-white/90">Menu</span>
       </button>
 
-      
+      <div
+        className={`fixed top-0 right-0 bottom-0 w-screen h-screen z-50 bg-black/60 backdrop-blur-3xl  transition-all duration-300 ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+          }`}
+        onClick={() => setIsOpen(false)}
+      > </div>
 
       <div
-        className={`fixed top-0 left-0 bottom-0 z-50 w-screen flex justify-between h-screen transform  border-r border-white/10 shadow-2xl transition-transform duration-200 ease-out ${isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 left-0 bottom-0 z-50 w-[260px] h-screen transform shadow-2xl transition-transform duration-200 ease-out ${isOpen ? "translate-x-0" : "-translate-x-full"
           }`}
       >
-        <div className="h-full w-[560px] flex flex-col pt-8 bg-[#0d0f13]">
+        <div className="h-full w-full flex flex-col pt-8 bg-[#0d0f13]">
           <div className="flex-1 overflow-y-auto custom-scrollbar px-4 space-y-6">
             <div className="space-y-3">
               <div className="text-[9px] font-bold uppercase tracking-[0.2em] text-neutral-500 pl-1">
@@ -94,11 +98,7 @@ const DrawerBasic = () => {
             </div>
           </div>
         </div>
-        <div
-        className={` w-full h-screen z-50 bg-black/60 backdrop-blur-3xl  transition-all duration-300 ${isOpen ? "opacity-100 " : "opacity-0 pointer-events-none"
-          }`}
-        onClick={() => setIsOpen(false)}
-      > </div>
+        
        
       </div>
 
