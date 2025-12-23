@@ -1,6 +1,6 @@
-# MS Agent 🤖 - Advanced AI Workspace
+# Prosperity Agent 🤖 - Advanced AI Workspace
 
-MS Agent is a powerful, unified AI assistant built with the MERN stack architecture, leveraging **Google Gemini 2.5 Flash** and the **Model Context Protocol (MCP)**. It goes beyond simple chat by integrating browser automation, email delivery, social media posting, and document generation into a sleek, premium interface.
+Prosperity Agent is a powerful, unified AI assistant built with the MERN stack architecture, leveraging **Google Gemini 2.5 Flash** and the **Model Context Protocol (MCP)**. It goes beyond simple chat by integrating browser automation, email delivery, social media posting, and document generation into a sleek, premium interface.
 
 ---
 
@@ -120,4 +120,4 @@ cd AI-Agent
 ---
 
 ## 📜 License
-This project is for educational purposes. Built with ❤️ by [Mohhit6075](https://github.com/Mohhit1230).
+This project is for educational purposes. Built by [Mohhit1230](https://github.com/Mohhit1230).

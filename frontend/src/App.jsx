@@ -149,11 +149,11 @@ function App() {
   return (
     <>
       {showPreloader && <Preloader onComplete={() => setShowPreloader(false)} />}
-      <div className={`bg-[#0f1115] h-fit body ${showPreloader ? 'h-screen overflow-hidden' : ''}`}>
+      <div className={`bg-[#0f1115] min-h-screen body ${showPreloader ? 'h-screen overflow-hidden' : ''}`}>
         <div className=" fixed inset-0 bg-[radial-gradient(70%_60%_at_30%_0%,rgba(16,185,129,0.14),rgba(0,0,0,0)_60%),radial-gradient(60%_50%_at_80%_10%,rgba(147,51,234,0.12),rgba(0,0,0,0)_55%)]" />
         <nav className="sticky top-0 z-30 w-full h-18 flex  justify-between px-8  border-b border-white/5 bg-[#0d0f13]/60 backdrop-blur-3xl backdrop-opacity-90">
           <div className="h-full w-44">
-            <img src="/logo2.webp" alt="" className="w-full h-full object-cover " />
+            <img src="/logo2.webp" alt="" className="w-full h-full object-cover brightness-105" />
           </div>
           <div className="flex items-center gap-2">
             <div className="hidden lg:block mt-3">
@@ -169,14 +169,16 @@ function App() {
             </div>
           </div>
         </nav>
-        <div className="mx-auto grid max-w-8xl grid-cols-1 gap-4 px-0 md:px-4 pb-8 pt-2 lg:grid-cols-[200px_minmax(0,1fr)_300px] md:gap-6 lg:gap-8">
-          <aside className="hidden lg:block">
-            <Options method={deleteHistory} />
+        <div className="bg-[#0f1115] mx-auto grid max-w-8xl grid-cols-1 gap-4 px-0 md:px-4 pb-8 pt-2 lg:grid-cols-[200px_minmax(0,1fr)_300px] md:gap-6 lg:gap-8">
+          <aside className="hidden lg:block relative">
+            <div className="sticky top-28">
+              <Options method={deleteHistory} />
+            </div>
           </aside>
 
           <main
             ref={chatContainerRef}
-            className="rounded-2xl relative w-full min-h-0 flex flex-col flex-1 "
+            className="rounded-2xl  relative w-full min-h-0 flex flex-col flex-1 "
           >
             <div className="flex relative w-full min-h-0 flex-1 h-[78dvh] md:h-[84dvh] lg:h-[86dvh] flex-col">
               {/* <header className="flex items-center justify-between border-b border-white/5 px-4 py-4">

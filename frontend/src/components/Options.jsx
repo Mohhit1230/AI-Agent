@@ -1,33 +1,35 @@
 import { Button } from "./ui/Button"
 import {
   Brain,
-  Sparkles
+  Sparkles,
+  Zap
 } from "lucide-react";
 
-export const Options = ({method}) => {
+export const Options = ({ method }) => {
   return (
     <div
-              className="fixed top-28 space-y-4"
-              onClick={method}
-            >
-              <Button
-                variant="secondary"
-                className="w-full justify-between rounded-2xl px-4 py-6"
-              >
-                <span className="flex items-center gap-2 mr-2">
-                  <Sparkles className="h-4 w-4 text-emerald-400" />
-                  New Chat
-                </span>
-                <Brain className="h-4 w-4 text-violet-300" />
-              </Button>
-              <div className="rounded-xl border border-white/10 bg-white/5 overflow-auto shadow-[0_10px_40px_-15px_rgba(0,0,0,0.6)]">
-                <div className="flex items-center justify-between gap-4 p-4 px-3">
-                  <span className="text-xs text-neutral-400">Model</span>
-                  <span className="w-full text-amber-300 items-center rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs">
-                    Gemini-2.5-flash
-                  </span>
-                </div>
-              </div>
-            </div>
+      className="space-y-4 w-full"
+      onClick={method}
+    >
+      <Button
+        variant="secondary"
+        className="w-full justify-between rounded-2xl px-4 py-3"
+      >
+        <span className="flex items-center gap-2 mr-2">
+          <Sparkles className="h-4 w-4 text-emerald-400" />
+          New Chat
+        </span>
+        <Brain className="h-4 w-4 text-violet-300" />
+      </Button>
+      <div className="rounded-xl border border-white/5 bg-white/5 shadow-xl">
+        <div className="flex flex-col gap-2 p-3">
+          <span className="text-[10px] text-neutral-500 uppercase tracking-widest font-bold">Current Model</span>
+          <span className="text-amber-300 flex items-center gap-2 rounded-lg border border-white/5 bg-black/40 px-3 py-2 text-xs">
+            <Zap className="h-3 w-3 text-amber-400" />
+            Gemini-2.5-flash
+          </span>
+        </div>
+      </div>
+    </div>
   )
 }

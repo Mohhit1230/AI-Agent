@@ -16,22 +16,6 @@ const features = [
 
 const FeaturesPanel = ({ drawer }) => {
   return (
-    // <div className="-ml-2 bg-[#212121] border border-zinc-500 tracking-widest p-4 rounded-2xl shadow-sm z-10 max-w-md w-fit mx-auto mt-6 bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-40">
-    //   <h2 className="text-white font-semibold text-lg mb-3 flex items-center tracking-wide gap-2">
-    //     ⚡ What more I Can Do 
-    //   </h2>
-    //   <ul className="space-y-2 text-sm text-gray-300">
-    //     {features.map((f, i) => (
-    //       <li key={i} className="flex items-center gap-2 hover:text-white transition-colors">
-    //         {f.icon}
-    //         <span>{f.label}</span>
-    //       </li>
-    //     ))}
-    //   </ul>
-    // </div>
-
-
-
     <div className="sticky top-28">
       <Card className={`rounded-2xl ${drawer === "drawer" ? "bg-[#212121]" : "bg-gradient-to-b from-white/10 to-white/5"} `}>
         <CardHeader className="space-y-1">
