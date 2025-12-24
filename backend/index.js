@@ -24,6 +24,8 @@ import {
   calendar_list_events,
   calendar_add_event,
   calendar_view_day,
+  keep_browser_list_notes,
+  keep_browser_create_note,
 } from "./mcp.tool.js";
 import multer from "multer";
 import { Buffer } from "buffer";
@@ -252,6 +254,23 @@ mcpServer.tool(
     date: z.string().describe("Date in YYYY-MM-DD format"),
   },
   async ({ date }) => calendar_view_day(date)
+);
+
+mcpServer.tool(
+  "keepListNotes",
+  "List notes from Google Keep using the browser",
+  {},
+  async () => keep_browser_list_notes()
+);
+
+mcpServer.tool(
+  "keepCreateNote",
+  "Create a new note in Google Keep using the browser",
+  {
+    title: z.string().optional(),
+    text: z.string(),
+  },
+  async ({ title, text }) => keep_browser_create_note(title, text)
 );
 
 

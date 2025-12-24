@@ -26,6 +26,7 @@ if (process.env.GOOGLE_REFRESH_TOKEN) {
 
 const calendar = google.calendar({ version: "v3", auth: oauth2Client });
 
+
 chromium.use(stealth());
 config();
 
@@ -543,3 +544,85 @@ export async function calendar_view_day(date) {
     return { content: [{ type: "text", text: `❌ Error viewing day: ${error.message}` }] };
   }
 }
+
+// Google Keep Browser-Based Tools
+export async function keep_browser_list_notes() {
+  const page = await getActivePage();
+  try {
+    await page.goto("https://keep.google.com", { waitUntil: "domcontentloaded" });
+    await humanDelay(3000, 5000);
+
+    // Check if we are at login page
+    if (page.url().includes("accounts.google.com")) {
+      return { content: [{ type: "text", text: "⚠️ You are not logged in to Google in the browser. Please log in to your Google account in the open browser window first." }] };
+    }
+
+    const notes = await page.evaluate(() => {
+      const noteEls = Array.from(document.querySelectorAll('.IZ65Hb-n0wA1d'));
+      return noteEls.map(el => {
+        const title = el.querySelector('.IZ65Hb-YPqjbf.oYycQ-V67S5c')?.innerText || "No Title";
+        const content = el.querySelector('.IZ65Hb-s2gSgc')?.innerText || "No Content";
+        return `Title: ${title}\nContent: ${content}`;
+      });
+    });
+
+    if (notes.length === 0) {
+      return { content: [{ type: "text", text: "No notes found in Google Keep (or they haven't loaded yet)." }] };
+    }
+
+    return { content: [{ type: "text", text: `Your Google Keep Notes:\n\n${notes.join('\n---\n')}` }] };
+  } catch (error) {
+    return { content: [{ type: "text", text: `❌ Browser Keep list failed: ${error.message}` }] };
+  }
+}
+
+export async function keep_browser_create_note(title, text) {
+  const page = await getActivePage();
+  try {
+    await page.goto("https://keep.google.com", { waitUntil: "domcontentloaded" });
+    await humanDelay(2000, 3000);
+
+    if (page.url().includes("accounts.google.com")) {
+      return { content: [{ type: "text", text: "⚠️ Please log in to Google Keep in the browser window first." }] };
+    }
+
+    // Click "Take a note..."
+    await page.click('[role="button"][aria-label="Take a note…"]', { timeout: 10000 });
+    await humanDelay(500, 1000);
+
+    // Type Title
+    if (title) {
+      const titleSelectors = ['div[aria-label="Title"]', '.IZ65Hb-YPqjbf-h1U9L-GnS9ce'];
+      let typedTitle = false;
+      for (const sel of titleSelectors) {
+        try {
+          await page.click(sel);
+          await page.keyboard.type(title);
+          typedTitle = true;
+          break;
+        } catch (e) { }
+      }
+    }
+
+    // Type Content
+    const bodySelectors = ['div[aria-label="Note"]', '.IZ65Hb-s2gSgc-h1U9L-GnS9ce'];
+    let typedBody = false;
+    for (const sel of bodySelectors) {
+      try {
+        await page.click(sel);
+        await page.keyboard.type(text);
+        typedBody = true;
+        break;
+      } catch (e) { }
+    }
+
+    // Close note
+    await page.click('div[role="button"]:has-text("Close"), .IZ65Hb-n0wA1d-haAit');
+    await humanDelay(1000, 2000);
+
+    return { content: [{ type: "text", text: `✅ Successfully created note: "${title}"` }] };
+  } catch (error) {
+    return { content: [{ type: "text", text: `❌ Browser Keep create failed: ${error.message}` }] };
+  }
+}
+
