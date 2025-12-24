@@ -21,6 +21,9 @@ import {
   browser_type,
   browser_press_key,
   browser_wait_for,
+  calendar_list_events,
+  calendar_add_event,
+  calendar_view_day,
 } from "./mcp.tool.js";
 import multer from "multer";
 import { Buffer } from "buffer";
@@ -217,6 +220,38 @@ mcpServer.tool(
     timeout: z.number().optional(),
   },
   async ({ selector, timeout }) => browser_wait_for(selector, timeout)
+);
+
+mcpServer.tool(
+  "calendarListEvents",
+  "List upcoming events from Google Calendar",
+  {
+    maxResults: z.number().optional().default(10),
+  },
+  async ({ maxResults }) => calendar_list_events(maxResults)
+);
+
+mcpServer.tool(
+  "calendarAddEvent",
+  "Add a new event to Google Calendar",
+  {
+    summary: z.string(),
+    description: z.string().optional(),
+    startTime: z.string().describe("ISO 8601 format (e.g., 2023-12-25T10:00:00Z)"),
+    endTime: z.string().describe("ISO 8601 format (e.g., 2023-12-25T11:00:00Z)"),
+    location: z.string().optional(),
+  },
+  async ({ summary, description, startTime, endTime, location }) =>
+    calendar_add_event(summary, description, startTime, endTime, location)
+);
+
+mcpServer.tool(
+  "calendarViewDay",
+  "View all events for a specific day",
+  {
+    date: z.string().describe("Date in YYYY-MM-DD format"),
+  },
+  async ({ date }) => calendar_view_day(date)
 );
 
 
@@ -544,7 +579,7 @@ app.post("/chat", async (req, res) => {
       if (loopCount > 0) await new Promise(r => setTimeout(r, 1000));
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash-exp",
+        model: "gemini-2.5-flash",
         contents: currentMessages,
         config: { tools: [{ functionDeclarations: tools }] }
       });

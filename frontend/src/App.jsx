@@ -151,7 +151,7 @@ function App() {
       {showPreloader && <Preloader onComplete={() => setShowPreloader(false)} />}
       <div className={`bg-[#0f1115] min-h-screen body ${showPreloader ? 'h-screen overflow-hidden' : ''}`}>
         <div className=" fixed inset-0 bg-[radial-gradient(70%_60%_at_30%_0%,rgba(16,185,129,0.14),rgba(0,0,0,0)_60%),radial-gradient(60%_50%_at_80%_10%,rgba(147,51,234,0.12),rgba(0,0,0,0)_55%)]" />
-        <nav className="sticky top-0 z-30 w-full h-18 flex  justify-between px-8  border-b border-white/5 bg-[#0d0f13]/60 backdrop-blur-3xl backdrop-opacity-90">
+        <nav className="sticky top-0 z-30 w-full h-18 flex  justify-between px-8  border-b border-white/5 bg-[#0d0f13]/70 backdrop-blur-3xl backdrop-opacity-90">
           <div className="h-full w-44">
             <img src="/logo2.webp" alt="" className="w-full h-full object-cover brightness-105" />
           </div>
@@ -465,7 +465,7 @@ function App() {
             <div className="mt-4 flex gap-4">
               <a
                 href={previewImage}
-                download="preview.png"
+                download="screenshot.png"
                 className="px-6 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full font-medium transition-colors shadow-lg shadow-emerald-500/20"
                 onClick={(e) => e.stopPropagation()}
               >
