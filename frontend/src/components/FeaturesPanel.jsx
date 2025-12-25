@@ -5,7 +5,6 @@ import { Mail, FileText, Twitter, Calculator, Zap, Globe, Camera, Search, Sticky
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card"
 
 const features = [
-  { icon: Calculator, title: "Calculate BMI", subtitle: "Quick health check" },
   { icon: Mail, title: "Send Emails", subtitle: "Draft & deliver fast" },
   { icon: Twitter, title: "Post on Twitter (X)", subtitle: "Compose & schedule" },
   { icon: FileText, title: "Generate PDF", subtitle: "Produce pdfs quickly" },
@@ -19,8 +18,8 @@ const features = [
 const FeaturesPanel = ({ drawer }) => {
   return (
     <div className="sticky top-28">
-      <Card className={`rounded-2xl ${drawer === "drawer" ? "bg-[#212121]" : "bg-gradient-to-b from-white/10 to-white/5"} `}>
-        <CardHeader className="space-y-1">
+      <Card className={`rounded-2xl ${drawer === "drawer" ? "bg-[#212121]" : "bg-white/5"} `}>
+        <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base text-white">
             <Zap className="h-4 w-4 text-amber-400" />
             What more I can do
@@ -37,7 +36,7 @@ const FeaturesPanel = ({ drawer }) => {
               <Icon className="mt-0.5 h-4 w-4 text-neutral-300" />
               <div className="flex-1">
                 <div className="text-sm text-white">{title}</div>
-                <div className="text-xs text-neutral-400">{subtitle}</div>
+               
               </div>
             </button>
           ))}

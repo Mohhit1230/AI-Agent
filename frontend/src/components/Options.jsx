@@ -2,7 +2,8 @@ import { Button } from "./ui/Button"
 import {
   Brain,
   Sparkles,
-  Zap
+  Zap,
+  SquarePen
 } from "lucide-react";
 
 export const Options = ({ method }) => {
@@ -13,13 +14,12 @@ export const Options = ({ method }) => {
     >
       <Button
         variant="secondary"
-        className="w-full justify-between rounded-2xl px-4 py-3"
+        className="w-full rounded-2xl flex justify-start"
       >
-        <span className="flex items-center gap-2 mr-2">
-          <Sparkles className="h-4 w-4 text-emerald-400" />
+        <span className="flex gap-2">
+          <SquarePen className='w-5 h-5 text-neutral-300' />
           New Chat
         </span>
-        <Brain className="h-4 w-4 text-violet-300" />
       </Button>
       <div className="rounded-xl border border-white/5 bg-white/5 shadow-xl">
         <div className="flex flex-col gap-2 p-3">

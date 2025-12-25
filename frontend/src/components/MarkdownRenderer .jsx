@@ -5,7 +5,7 @@ import CopyButton from "./CopyButton";
 
 const MarkdownRenderer = ({ content }) => {
   return (
-    <div className="max-w-3xl text-white text-sm mx-auto">
+    <div className="max-w-3xl text-white font-normal text-sm mx-auto">
       <ReactMarkdown
         rehypePlugins={[rehypeHighlight]}
         components={{
@@ -16,10 +16,10 @@ const MarkdownRenderer = ({ content }) => {
             <h2 className="text-2xl font-semibold mt-5 mb-2" {...props} />
           ),
           h3: ({ ...props }) => (
-            <h3 className="text-xl font-semibold mt-4 mb-2" {...props} />
+            <h3 className="text-xl font-medium mt-4 mb-2" {...props} />
           ),
           h4: ({ ...props }) => (
-            <h4 className="text-xl font-medium mt-3 mb-2" {...props} />
+            <h4 className="text-xl font-normal mt-3 mb-2" {...props} />
           ),
           em: ({ children, ...props }) => (
             <em className="italic text-gray-200" {...props}>
