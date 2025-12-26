@@ -559,16 +559,35 @@ export async function keep_browser_list_notes() {
     }
 
     const notes = await page.evaluate(() => {
-      const noteEls = Array.from(document.querySelectorAll('.IZ65Hb-n0wA1d'));
+      // Try multiple selectors as Google Keep classes change frequently
+      const noteSelectors = ['.IZ65Hb-n0wA1d', '.ghoRbe', 'div[role="listitem"]', '.m9v94e'];
+      let noteEls = [];
+
+      for (const sel of noteSelectors) {
+        const found = Array.from(document.querySelectorAll(sel));
+        if (found.length > 0) {
+          noteEls = found;
+          break;
+        }
+      }
+
       return noteEls.map(el => {
-        const title = el.querySelector('.IZ65Hb-YPqjbf.oYycQ-V67S5c')?.innerText || "No Title";
-        const content = el.querySelector('.IZ65Hb-s2gSgc')?.innerText || "No Content";
+        // Try common title/content selectors used by Keep
+        const title = el.querySelector('.IZ65Hb-YPqjbf, .gm2-title-2, .oYycQ-V67S5c, [contenteditable="false"]')?.innerText || "No Title";
+        const content = el.querySelector('.IZ65Hb-s2gSgc, .gm2-body-2, .h1U9L-GnS9ce')?.innerText || "No Content";
         return `Title: ${title}\nContent: ${content}`;
       });
     });
 
     if (notes.length === 0) {
-      return { content: [{ type: "text", text: "No notes found in Google Keep (or they haven't loaded yet)." }] };
+      // Take a diagnostic screenshot if no notes are found to help the user see what's wrong
+      const screenshot = await page.screenshot({ type: 'png' });
+      return {
+        content: [
+          { type: "text", text: "No notes found in Google Keep. This might be because the page hasn't finished loading or the selectors need updating." },
+          { type: "image", data: screenshot.toString("base64"), mimeType: "image/png" }
+        ]
+      };
     }
 
     return { content: [{ type: "text", text: `Your Google Keep Notes:\n\n${notes.join('\n---\n')}` }] };
