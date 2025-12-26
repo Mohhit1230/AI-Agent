@@ -1,5 +1,34 @@
 @import "tailwindcss";
 
+* {
+  font-family: "Mulish", sans-serif;
+  font-optical-sizing: auto;
+  scroll-behavior: smooth;
+
+  box-sizing: border-box;
+ 
+}
+
+.bubble-loader {
+  width: 10px;
+  height: 10px;
+  background-color: #b6beb5; 
+  border-radius: 50%;
+  animation: bubblePulse 1.2s infinite ease-in-out;
+  margin: 10px auto;
+}
+
+@keyframes bubblePulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
 
 /* Hard fallback to dark even if Tailwind didn't load yet */
 :root { color-scheme: dark; }

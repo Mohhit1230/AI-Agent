@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import "./App.css"
 import NewChatScreen from "./components/NewChatScreen";
 import CopyButton from "./components/CopyButton";
 import FeaturesPanel from "./components/FeaturesPanel";
@@ -10,16 +9,7 @@ import Preloader from "./components/Preloader";
 
 import {
   Bot,
-  Brain,
-  Calculator,
-  Check,
-  Copy,
   FileText,
-  Mail,
-  Menu,
-  Send,
-  Sparkles,
-  Twitter,
   Zap,
   Trash2,
 } from "lucide-react";
@@ -121,7 +111,6 @@ function App() {
     };
 
     container.addEventListener("scroll", handleScroll);
-    // Initial check after content might have rendered
     handleScroll();
     return () => container.removeEventListener("scroll", handleScroll);
   }, [history, loading]);
@@ -165,7 +154,7 @@ function App() {
   return (
     <>
       {showPreloader && <Preloader onComplete={() => setShowPreloader(false)} />}
-      <div className={`bg-[#0f1115] min-h-screen body ${showPreloader ? 'h-screen overflow-hidden' : ''}`}>
+      <div className={`bg-[#0f1115] min-h-screen ${showPreloader ? 'h-screen overflow-hidden' : ''}`}>
         <div className=" fixed inset-0 bg-[radial-gradient(70%_60%_at_30%_0%,rgba(16,185,129,0.14),rgba(0,0,0,0)_60%),radial-gradient(60%_50%_at_80%_10%,rgba(147,51,234,0.12),rgba(0,0,0,0)_55%)]" />
         <nav className="sticky top-0 z-30 w-full h-18 flex  justify-between px-8  border-b border-white/5 bg-[#0d0f13]/70 backdrop-blur-3xl backdrop-opacity-90">
           <div className="h-full w-44">
@@ -193,13 +182,10 @@ function App() {
           </aside>
 
           <main
-            className="rounded-2xl relative w-full min-h-0 flex flex-col flex-1 "
+            className="rounded-2xl relative w-full min-h-0 flex flex-col flex-1 text-wrap overflow-hidden"
           >
             <div className="flex relative w-full min-h-0 flex-1 h-[78dvh] md:h-[84dvh] lg:h-[86dvh] flex-col">
-              {/* <header className="flex items-center justify-between border-b border-white/5 px-4 py-4">
-          <span className="text-sm font-medium text-neutral-300 tracking-tight">Conversation</span>
-           <Badge className="bg-black/40">Today</Badge>
-         </header> */}
+              
               <div className="flex min-h-0 flex-1 flex-col pb-40 px-4 py-4 ">
                 <div
                   ref={chatContainerRef}
@@ -221,7 +207,7 @@ function App() {
                             <div
                               className={`relative max-w-[100%] tracking-wider group ${m.role === "user"
                                 ? " bg-[#282a2c] text-[#e7e5e5] shadow rounded-2xl px-3 pt-2 break-words whitespace-pre-wrap"
-                                : "mt-6 mb-4  pt-2  rounded-2xl text-[#e7e5e5] "
+                                : "mt-6 mb-4 pt-2 rounded-2xl text-[#e7e5e5] "
                                 }`}
                             >
                               {(() => {

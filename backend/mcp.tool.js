@@ -1,4 +1,5 @@
 import { config } from "dotenv";
+import fs from "fs/promises";
 import { TwitterApi } from "twitter-api-v2";
 import nodemailer from "nodemailer";
 import PDFDocument from "pdfkit";
@@ -625,4 +626,78 @@ export async function keep_browser_create_note(title, text) {
     return { content: [{ type: "text", text: `❌ Browser Keep create failed: ${error.message}` }] };
   }
 }
+
+// Local File System Reader/Writer
+export async function read_project_file(filePath) {
+  try {
+    const data = await fs.readFile(filePath, "utf-8");
+    return {
+      content: [
+        {
+          type: "text",
+          text: `File content of ${filePath}:\n\n${data}`,
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      content: [
+        {
+          type: "text",
+          text: `❌ Error reading file ${filePath}: ${error.message}`,
+        },
+      ],
+    };
+  }
+}
+
+export async function update_code_snippet(filePath, content) {
+  try {
+    const dir = path.dirname(filePath);
+    await fs.mkdir(dir, { recursive: true });
+    await fs.writeFile(filePath, content, "utf-8");
+    return {
+      content: [
+        {
+          type: "text",
+          text: `✅ Successfully updated file: ${filePath}`,
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      content: [
+        {
+          type: "text",
+          text: `❌ Error updating file ${filePath}: ${error.message}`,
+        },
+      ],
+    };
+  }
+}
+
+export async function list_project_files(dirPath) {
+  try {
+    const files = await fs.readdir(dirPath, { withFileTypes: true });
+    const fileList = files.map(f => `${f.isDirectory() ? '📁' : '📄'} ${f.name}`).join('\n');
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Files in ${dirPath}:\n\n${fileList}`,
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      content: [
+        {
+          type: "text",
+          text: `❌ Error listing directory ${dirPath}: ${error.message}`,
+        },
+      ],
+    };
+  }
+}
+
 
