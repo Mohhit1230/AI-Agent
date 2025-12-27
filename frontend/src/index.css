@@ -6,35 +6,105 @@
   scroll-behavior: smooth;
 
   box-sizing: border-box;
- 
+
 }
 
 .bubble-loader {
   width: 10px;
   height: 10px;
-  background-color: #b6beb5; 
+  background-color: #b6beb5;
   border-radius: 50%;
   animation: bubblePulse 1.2s infinite ease-in-out;
   margin: 10px auto;
 }
 
 @keyframes bubblePulse {
+
   0%,
   100% {
     transform: scale(1);
     opacity: 0.6;
   }
+
   50% {
     transform: scale(1.2);
     opacity: 1;
   }
 }
 
-/* Hard fallback to dark even if Tailwind didn't load yet */
-:root { color-scheme: dark; }
+
+:root {
+  color-scheme: dark;
+}
 
 
 
-::-webkit-scrollbar { width: 6px; color: rgba(255,255,255,0.2); }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s ease-out forwards;
+}
+
+/* Global Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Specific Utility to hide scrollbar while keeping functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
