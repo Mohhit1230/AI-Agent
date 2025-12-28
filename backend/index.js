@@ -29,6 +29,16 @@ import {
   read_project_file,
   update_code_snippet,
   list_project_files,
+  git_check_status,
+  github_create_issue,
+  git_list_commits,
+  git_commit_all,
+  git_push,
+  github_create_pull_request,
+  github_list_issues,
+  github_list_pull_requests,
+  github_get_repo_stats,
+  github_get_user_profile,
 } from "./mcp.tool.js";
 import multer from "multer";
 import { Buffer } from "buffer";
@@ -282,6 +292,105 @@ mcpServer.tool(
   async ({ dirPath }) => list_project_files(dirPath)
 );
 
+mcpServer.tool(
+  "gitCheckStatus",
+  "Check the current status of the git repository",
+  {},
+  async () => git_check_status()
+);
+
+mcpServer.tool(
+  "githubCreateIssue",
+  "Create a new issue on a GitHub repository",
+  {
+    owner: z.string().describe("The account owner of the repository. The name is not case sensitive."),
+    repo: z.string().describe("The name of the repository without the .git extension. The name is not case sensitive."),
+    title: z.string().describe("The title of the issue."),
+    body: z.string().describe("The contents of the issue."),
+  },
+  async ({ owner, repo, title, body }) => github_create_issue(owner, repo, title, body)
+);
+
+mcpServer.tool(
+  "gitListCommits",
+  "List the latest commits in the repository",
+  {
+    count: z.number().optional().default(5).describe("Number of commits to list"),
+  },
+  async ({ count }) => git_list_commits(count)
+);
+
+mcpServer.tool(
+  "gitCommitAll",
+  "Stage all changes and commit them with a message",
+  {
+    message: z.string().describe("The commit message"),
+  },
+  async ({ message }) => git_commit_all(message)
+);
+
+mcpServer.tool(
+  "gitPush",
+  "Push the committed changes to the remote repository",
+  {},
+  async () => git_push()
+);
+
+mcpServer.tool(
+  "githubCreatePullRequest",
+  "Create a new pull request on a GitHub repository",
+  {
+    owner: z.string(),
+    repo: z.string(),
+    title: z.string(),
+    body: z.string(),
+    head: z.string().describe("The name of the branch where your changes are implemented."),
+    base: z.string().optional().default("main").describe("The name of the branch you want the changes pulled into."),
+  },
+  async ({ owner, repo, title, body, head, base }) => github_create_pull_request(owner, repo, title, body, head, base)
+);
+
+mcpServer.tool(
+  "githubListIssues",
+  "List issues for a specific GitHub repository",
+  {
+    owner: z.string(),
+    repo: z.string(),
+    state: z.enum(["open", "closed", "all"]).optional().default("open"),
+  },
+  async ({ owner, repo, state }) => github_list_issues(owner, repo, state)
+);
+
+mcpServer.tool(
+  "githubListPullRequests",
+  "List pull requests for a specific GitHub repository",
+  {
+    owner: z.string(),
+    repo: z.string(),
+    state: z.enum(["open", "closed", "all"]).optional().default("open"),
+  },
+  async ({ owner, repo, state }) => github_list_pull_requests(owner, repo, state)
+);
+
+mcpServer.tool(
+  "githubGetRepoStats",
+  "Get statistics like stars and forks for a repository",
+  {
+    owner: z.string(),
+    repo: z.string(),
+  },
+  async ({ owner, repo }) => github_get_repo_stats(owner, repo)
+);
+
+mcpServer.tool(
+  "githubGetUserProfile",
+  "Get public profile information for a GitHub user",
+  {
+    username: z.string(),
+  },
+  async ({ username }) => github_get_user_profile(username)
+);
+
 
 
 // MCP server SSE route
@@ -454,6 +563,19 @@ app.post("/chat", async (req, res) => {
 - **Email**: Use \`sendEmail\` for sending status updates, reports, or messages. Ensure the 'subject' is professional and the 'text' is clear.
 - **Social Media**: Use \`createPost\` to share updates on X (Twitter). Keep posts engaging and use relevant hashtags if appropriate.
 - **PDF Generation**: Use \`givemePDF\` whenever the user wants to convert text, reports, or lists into a formal document. This is great for summaries or meeting notes.
+ 
+## GIT & GITHUB PROTOCOLS
+- Use \`gitCheckStatus\` to see modified files and current branch.
+- Use \`gitListCommits\` when asked to summarize recent work or check history.
+- Use \`gitCommitAll\` to stage and commit changes.
+- Use \`gitPush\` to send local changes to the remote repository.
+- Use \`githubCreateIssue\` to report bugs or request features.
+- Use \`githubListIssues\` to see existing bugs or tasks.
+- Use \`githubListPullRequests\` to see work-in-progress by others.
+- Use \`githubCreatePullRequest\` to propose your changes formally.
+- Use \`githubGetRepoStats\` and \`githubGetUserProfile\` for research.
+- **Workflow Strategy**: If a user says "Commit and push", call \`gitCommitAll\` first, then \`gitPush\`.
+- **Proactive Issue Research**: If a user asks about a repo, check its stats and issues to provide a complete picture.
 `,
         },
       ],

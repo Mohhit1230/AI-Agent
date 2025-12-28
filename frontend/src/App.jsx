@@ -110,14 +110,16 @@ function App() {
       const { scrollHeight, clientHeight, scrollTop } = container;
       const isScrollable = scrollHeight > clientHeight;
       const isNotAtBottom = scrollHeight - clientHeight - scrollTop > 50;
-
+      console.log("isScrollable: ", isScrollable);
+      console.log("isNotAtBottom: ", isNotAtBottom);
+      console.log("history.length: ", history.length);
+      console.log("showScrollButton: ", isScrollable && isNotAtBottom && history.length > 0);
       setShowScrollButton(isScrollable && isNotAtBottom && history.length > 0);
     };
 
     container.addEventListener("scroll", handleScroll);
-    handleScroll();
     return () => container.removeEventListener("scroll", handleScroll);
-  }, [history, loading]);
+  }, [history]);
 
   const scrollToBottom = () => {
 
@@ -163,9 +165,9 @@ function App() {
         <Route path="/" element={
           <div className={`flex bg-[#0f1115] min-h-screen ${showPreloader ? 'h-screen overflow-hidden' : ''}`}>
             <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-[-20%] left-[-4%] w-[40%] h-[40%] bg-emerald-500/10 blur-[120px] rounded-full" />
-                <div className="absolute bottom-[-10%] right-[-20%] w-[40%] h-[40%] bg-purple-500/10 blur-[120px] rounded-full" />
-                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
+              <div className="absolute top-[-20%] left-[-4%] w-[40%] h-[40%] bg-emerald-500/10 blur-[120px] rounded-full" />
+              <div className="absolute bottom-[-10%] right-[-20%] w-[40%] h-[40%] bg-purple-500/10 blur-[120px] rounded-full" />
+              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
             </div>
 
             <DrawerBasic
@@ -364,8 +366,8 @@ function App() {
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && sendMessage()}
                         disabled={loading}
-                        placeholder="Message Prosperity Agent..."
-                        className="w-full bg-[#1e2025] text-white rounded-2xl border border-white/10 px-4 py-4 pr-14 text-sm outline-none resize-none h-14 max-h-40 focus:border-emerald-500/30 transition-all shadow-2xl"
+                        placeholder="Ask anything ..."
+                        className="w-full bg-[#1e2025] text-white rounded-2xl border border-white/10 px-4 py-4 pr-14 text-sm outline-none resize-none h-14 max-h-40 focus:border-emerald-500/30 transition-all shadow-2xl placeholder:tracking-wider"
                       />
                       <div className="absolute right-3.5 bottom-5.5">
                         {loading ? (
@@ -380,14 +382,23 @@ function App() {
                       </div>
                     </div>
 
-                    {showScrollButton && (
+                    {/* Scroll to Bottom Button */}
+
+                    {showScrollButton ? (
                       <button
                         onClick={scrollToBottom}
-                        className=" flex items-center justify-center bg-emerald-500 text-white p-3 rounded-full shadow-[0_0_30px_rgba(16,185,129,0.4)] transition-all duration-300 hover:scale-110 hover:bg-emerald-400 active:scale-95 z-[9999] cursor-pointer"
+                        className="absolute -top-0 right-16 -translate-x-1/2 flex items-center justify-center border bg-black/30 text-white p-2 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:bg-emerald-400 active:scale-95 z-[9999] cursor-pointer"
                       >
-                        <MoveDown className="h-6 w-6 stroke-[3px]" />
+                        <MoveDown className="h-5 w-5 " />
                       </button>
-                    )}
+                    ):(<button
+                        onClick={scrollToBottom}
+                        className="absolute -top-0 right-16 -translate-x-1/2 flex items-center justify-center border bg-red-400/30 text-white p-2 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:bg-emerald-400 active:scale-95 z-[9999] cursor-pointer"
+                      >
+                        <MoveDown className="h-5 w-5 " />
+                      </button>)}
+
+
 
                     <p className="text-[10px] text-center text-neutral-500 mt-3 font-medium tracking-tight">
                       Prosperity Agent may display inaccurate info, including about people, so double-check its responses.

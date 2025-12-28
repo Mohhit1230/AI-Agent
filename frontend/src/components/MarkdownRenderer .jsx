@@ -5,7 +5,7 @@ import CopyButton from "./CopyButton";
 
 const MarkdownRenderer = ({ content }) => {
   return (
-    <div className="max-w-3xl text-white font-normal text-sm text-wrap overflow-x-hidden">
+    <div className="max-w-3xl text-white font-normal text-xs text-wrap overflow-x-hidden">
       <ReactMarkdown
         rehypePlugins={[rehypeHighlight]}
         components={{
