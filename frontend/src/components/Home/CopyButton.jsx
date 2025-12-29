@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CopyIcon, CheckIcon } from "lucide-react";
+import {  CheckIcon } from "lucide-react";
 
 const CopyButton = ({ text, user, model, pdf }) => {
   const [copied, setCopied] = useState(false);

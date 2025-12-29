@@ -91,7 +91,7 @@ const MarkdownRenderer = ({ content }) => {
                 className={
                   isInsideList
                     ? ""
-                    : "mb-3  tracking-wider font-extralight leading-relaxed text-gray-100 text-xs"
+                    : "mb-3 mt-2 tracking-wider font-extralight leading-relaxed text-gray-100 text-xs"
                 }
                 {...props}
               />

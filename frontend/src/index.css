@@ -1,13 +1,34 @@
 @import "tailwindcss";
 
+
+:root {
+  --font-mulish: "Mulish", sans-serif;
+}
+
 * {
-  font-family: "Mulish", sans-serif;
+  font-family: var(--font-mulish), sans-serif !important;
   font-optical-sizing: auto;
   scroll-behavior: smooth;
-
   box-sizing: border-box;
-
 }
+
+body {
+  background: #0f1115;
+}
+
+/* Performance optimizations */
+textarea,
+input {
+  will-change: contents;
+  contain: layout style;
+}
+
+.fixed {
+  will-change: transform;
+  contain: layout;
+}
+
+
 
 .bubble-loader {
   width: 10px;
@@ -32,12 +53,9 @@
   }
 }
 
-
 :root {
   color-scheme: dark;
 }
-
-
 
 @keyframes fadeIn {
   from {
@@ -97,14 +115,11 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Specific Utility to hide scrollbar while keeping functionality */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
 .no-scrollbar {
   -ms-overflow-style: none;
-  /* IE and Edge */
   scrollbar-width: none;
-  /* Firefox */
 }

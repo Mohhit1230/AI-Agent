@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 
 const Preloader = ({ onComplete }) => {
@@ -136,7 +136,7 @@ const Preloader = ({ onComplete }) => {
         >
             {/* Staircase Panels */}
             <div className="absolute inset-0 flex pointer-events-none">
-                {[...Array(10)].map((_, i) => (
+                {[...Array(5)].map((_, i) => (
                     <div
                         key={i}
                         ref={el => panelsRef.current[i] = el}
@@ -173,7 +173,7 @@ const Preloader = ({ onComplete }) => {
 
                     {/* Floating Glass Shards (Prism Layers) */}
                     <div className="absolute inset-0" style={{ transformStyle: 'preserve-3d' }}>
-                        {[...Array(8)].map((_, i) => (
+                        {[...Array(4)].map((_, i) => (
                             <div
                                 key={`shard-${i}`}
                                 ref={el => shardsRef.current[i] = el}

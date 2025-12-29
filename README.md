@@ -100,4 +100,4 @@ cd AI-Agent
 ---
 
 ## 📜 License
-This project is for educational purposes. Built by [Mohhit6075](https://github.com/Mohhit6075).
+This project is for educational purposes. Built by [Mohhit1230](https://github.com/Mohhit1230).

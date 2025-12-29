@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import {
   Info,
   ExternalLink,
@@ -6,7 +6,7 @@ import {
   SquarePen
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Button } from "../ui/Button";
+
 
 const DrawerBasic = ({ isOpen, setIsOpen, deleteHistory }) => {
   // Handle escape key to close drawer
@@ -62,9 +62,9 @@ const DrawerBasic = ({ isOpen, setIsOpen, deleteHistory }) => {
           </div>
 
           <div className="flex-1 overflow-y-auto space-y-2 custom-scrollbar">
-            <Button
-        variant="secondary"
-        className="w-full rounded-2xl flex justify-start group"
+            <button
+        
+        className="w-full flex justify-start items-center group bg-white/5 text-neutral-100 hover:bg-white/10 border border-white/10 h-10 rounded-lg px-4 text-sm"
         onClick={() => {
           deleteHistory();
           setIsOpen(false);
@@ -74,7 +74,7 @@ const DrawerBasic = ({ isOpen, setIsOpen, deleteHistory }) => {
           <SquarePen className='w-5 h-5 text-neutral-300 group-hover:text-emerald-400 transition-colors' />
           New Chat
         </span>
-      </Button>
+      </button>
           </div>
 
           <div className="pt-4 border-t border-white/5 space-y-1">

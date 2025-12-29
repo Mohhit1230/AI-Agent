@@ -95,9 +95,9 @@ const About = () => {
                 scale: 1,
                 opacity: 100,
                 duration: .8,
-                stagger: .1,
+                stagger: .2,
                 ease: "back.out(1.2)",
-                
+
             });
 
             ScrollTrigger.refresh();
@@ -107,7 +107,7 @@ const About = () => {
     }, []);
 
     return (
-        <div ref={containerRef} className="bg-[#0b0c10] min-h-screen text-slate-300 selection:bg-emerald-500/30 font-sans overflow-x-hidden">
+        <div ref={containerRef} className="bg-[#0b0c10] min-h-screen text-slate-300 selection:bg-emerald-500/30 font-mono overflow-x-hidden">
             {/* Premium Background */}
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-500/10 blur-[120px] rounded-full" />
@@ -126,16 +126,15 @@ const About = () => {
             </div>
 
             {/* Navbar */}
-            <nav className="sticky top-0 z-[100] w-full h-20 border-b border-white/5 bg-[#0b0c10]/80 backdrop-blur-xl flex items-center justify-between px-6 md:px-12">
-                <div className="flex items-center gap-4 cursor-pointer group" onClick={() => navigate("/")}>
-                    <div className="relative h-10 w-10 flex items-center justify-center">
-                        <div className="absolute inset-0 bg-emerald-500/20 blur-md group-hover:blur-xl transition-all" />
-                        <img src="/logo2.webp" alt="Logo" className="w-8 h-8 relative z-10 brightness-125" />
-                    </div>
-                    <div className="flex flex-col">
-                        <span className="text-sm font-black tracking-[0.2em] text-white uppercase">Prosperity</span>
-                        <span className="text-[10px] font-bold text-emerald-500 tracking-widest uppercase -mt-1">Agent Alpha</span>
-                    </div>
+            <nav className="fixed top-0 left-0 right-0 z-[100] w-full h-20 border-b border-white/5 bg-[#0b0c10]/80 backdrop-blur-xl flex items-center justify-between px-6 md:px-12">
+                <div className="w-48 flex items-center gap-2 px-2 py-3 mb-2" onClick={() => navigate("/")}>
+
+
+                    <div className="absolute h-16 w-52 top-0 left-16 inset-0 bg-emerald-500/6 blur-md" />
+                    <img src="/logo2.webp" alt="Logo" className="w-full h-full object-cover relative z-10 brightness-110" />
+
+
+
                 </div>
 
                 <button
@@ -150,7 +149,7 @@ const About = () => {
                 </button>
             </nav>
 
-            <main className="relative z-10 max-w-6xl mx-auto px-6 py-20">
+            <main className="relative z-10 max-w-6xl mx-auto px-6 py-20 mt-20">
                 {/* Hero Section */}
                 <section className="mb-32">
                     <div className="hero-content inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-emerald-500/5 border border-emerald-500/10 mb-10 hover:border-emerald-500/30 transition-colors">
@@ -158,11 +157,11 @@ const About = () => {
                         <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Powered by Gemini 2.5 Flash</span>
                     </div>
 
-                    <h1 className="hero-content text-6xl md:text-8xl font-black tracking-tighter text-white mb-8 leading-[0.9]">
+                    <h1 className="hero-content text-6xl md:text-8xl font-sans  font-black tracking-tight text-white mb-8 leading-[0.9]">
                         Advanced <br /> AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">Workspace.</span>
                     </h1>
 
-                    <p className="hero-content max-w-2xl text-xl text-slate-400 leading-relaxed font-medium">
+                    <p className="hero-content max-w-2xl text-lg font-sans text-slate-400 leading-relaxed font-medium">
                         Prosperity Agent is a unified intelligence layer built with the MERN stack.
                         It transcends simple chat by integrating <span className="text-white">browser automation</span>,
                         <span className="text-white">document generation</span>, and <span className="text-white">real-world actions</span> into one seamless workflow.
@@ -186,9 +185,9 @@ const About = () => {
                         ].map((item, i) => (
                             <div key={i} className="group p-8 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-emerald-500/20 transition-all duration-500">
                                 <span className="text-4xl font-black text-white/5 group-hover:text-emerald-500/20 transition-colors mb-6 block font-mono">{item.step}</span>
-                                <item.icon className="h-6 w-6 text-emerald-500 mb-4 group-hover:animate-bounce" style={{ animationDuration: '2s' }} />
+                                <item.icon className="h-6 w-6 text-emerald-500 mb-4 group-hover:-translate-y-1 transition-transform" />
                                 <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
-                                <p className="text-sm text-slate-500 leading-relaxed">{item.desc}</p>
+                                <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -220,7 +219,7 @@ const About = () => {
                                             <div className="relative z-10">
                                                 <item.icon className="h-4 w-4 text-emerald-500/50 group-hover:text-emerald-400 group-hover:scale-110 transition-all mb-3 group-hover:rotate-12" />
                                                 <h4 className="text-sm font-bold text-white mb-1 group-hover:text-emerald-300 transition-colors">{item.title}</h4>
-                                                <p className="text-xs text-slate-500 leading-relaxed group-hover:text-slate-400 transition-colors">{item.desc}</p>
+                                                <p className="text-xs text-gray-400 leading-relaxed group-hover:text-slate-400 transition-colors">{item.desc}</p>
                                             </div>
 
                                             {/* Bottom Glow */}
@@ -267,7 +266,7 @@ const About = () => {
                         <div className="relative">
                             <div className="absolute inset-0 bg-emerald-500/20 blur-[60px] animate-pulse" />
                             <div className="relative p-8 rounded-3xl bg-neutral-900 border border-white/10 shadow-2xl scale-110">
-                                <Bot className="h-24 w-24 text-emerald-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
+                                <img src="/logo2.webp" alt="" className="w-60 h-full object-cover brightness-110" />
                             </div>
                         </div>
                     </div>
