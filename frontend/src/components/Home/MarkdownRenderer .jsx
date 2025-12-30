@@ -10,16 +10,22 @@ const MarkdownRenderer = ({ content }) => {
         rehypePlugins={[rehypeHighlight]}
         components={{
           h1: ({ ...props }) => (
-            <h1 className="text-3xl font-extrabold mt-6 mb-2 " {...props} />
+            <h1 className="text-2xl font-bold mt-6 mb-2 " {...props} />
           ),
           h2: ({ ...props }) => (
-            <h2 className="text-2xl font-bold mt-5 mb-2" {...props} />
+            <h2 className="text-xl font-semibold mt-5 mb-2" {...props} />
           ),
           h3: ({ ...props }) => (
-            <h3 className="text-xl font-bold mt-4 mb-2" {...props} />
+            <h3
+              className="text-lg tracking-wider font-semibold mt-4 mb-2"
+              {...props}
+            />
           ),
           h4: ({ ...props }) => (
-            <h4 className="text-xl font-semibold mt-3 mb-2" {...props} />
+            <h4
+              className="text-lg tracking-wider font-semibold mt-3 mb-2"
+              {...props}
+            />
           ),
           em: ({ children, ...props }) => (
             <em className="italic text-gray-200" {...props}>
@@ -47,7 +53,6 @@ const MarkdownRenderer = ({ content }) => {
             </li>
           ),
           code: ({ inline, className, children, ...props }) => {
-
             return inline ? (
               <code className=" text-zinc-300 px-1 pb-1 rounded" {...props}>
                 {children}
@@ -58,13 +63,10 @@ const MarkdownRenderer = ({ content }) => {
                 {...props}
               >
                 {children}
-
               </code>
-
             );
           },
           pre: ({ children }) => {
-
             const className = children?.props?.className || "";
             const language = className.replace("hljs language-", "") || "text";
 
@@ -73,13 +75,15 @@ const MarkdownRenderer = ({ content }) => {
                 {/* 🏷️ Language Label */}
                 <div className="relative px-4 py-1 text-xs font-mono bg-white/5 text-zinc-400 border-b border-zinc-700 tracking-wider">
                   <span>{language}</span>
-                  <CopyButton text={`\`\`\`${content.split("```")[1]}\`\`\``} user="" model="assistant" />
+                  <CopyButton
+                    text={`\`\`\`${content.split("```")[1]}\`\`\``}
+                    user=""
+                    model="assistant"
+                  />
                 </div>
 
                 {/* 💻 Actual Code Block */}
-                <pre className="overflow-x-hidden ">
-                  {children}
-                </pre>
+                <pre className="overflow-x-hidden ">{children}</pre>
               </div>
             );
           },
@@ -116,17 +120,16 @@ const MarkdownRenderer = ({ content }) => {
                 className="w-full h-auto object-contain max-h-[500px]"
                 {...props}
               />
-              {alt && alt !== 'screenshot' && (
+              {alt && alt !== "screenshot" && (
                 <div className="px-4 py-2 bg-white/5 text-[10px] text-zinc-400 italic border-t border-white/5">
                   {alt}
                 </div>
               )}
             </div>
           ),
-
         }}
       >
-        {typeof content === 'string' ? content : JSON.stringify(content)}
+        {typeof content === "string" ? content : JSON.stringify(content)}
       </ReactMarkdown>
     </div>
   );

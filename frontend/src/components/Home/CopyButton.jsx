@@ -1,12 +1,16 @@
 import { useState } from "react";
-import {  CheckIcon } from "lucide-react";
+import { CheckIcon } from "lucide-react";
 
-const CopyButton = ({ text, user, model, pdf }) => {
+const CopyButton = ({ text, pdf }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
     try {
-      (pdf === "resource_link") ? (await navigator.clipboard.writeText(`Download your PDF: ${text.name} \nURL:"${text.uri}"`)) : (await navigator.clipboard.writeText(text))
+      pdf === "resource_link"
+        ? await navigator.clipboard.writeText(
+            `Download your PDF: ${text.name} \nURL:"${text.uri}"`
+          )
+        : await navigator.clipboard.writeText(text);
 
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);

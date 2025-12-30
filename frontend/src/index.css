@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-
 :root {
   --font-mulish: "Mulish", sans-serif;
 }
@@ -28,8 +27,6 @@ input {
   contain: layout;
 }
 
-
-
 .bubble-loader {
   width: 10px;
   height: 10px;
@@ -40,7 +37,6 @@ input {
 }
 
 @keyframes bubblePulse {
-
   0%,
   100% {
     transform: scale(1);

@@ -1,12 +1,6 @@
 import { useEffect } from "react";
-import {
-  Info,
-  ExternalLink,
-  X,
-  SquarePen
-} from "lucide-react";
+import { Info, ExternalLink, X, SquarePen } from "lucide-react";
 import { Link } from "react-router-dom";
-
 
 const DrawerBasic = ({ isOpen, setIsOpen, deleteHistory }) => {
   // Handle escape key to close drawer
@@ -49,32 +43,32 @@ const DrawerBasic = ({ isOpen, setIsOpen, deleteHistory }) => {
       `}
       >
         <div className="flex flex-col h-full p-4 gap-4 relative">
-          
-
           <div className="flex items-center gap-2 px-2 py-3 mb-2">
             <div className="relative h-10 w-full flex items-center gap-3">
               <div className="h-10 w-full relative px-6">
                 <div className="absolute inset-0 bg-emerald-500/6 blur-md" />
-                <img src="/logo2.webp" alt="Logo" className="w-full h-full object-cover relative z-10 brightness-110" />
+                <img
+                  src="/logo2.webp"
+                  alt="Logo"
+                  className="w-full h-full object-cover relative z-10 brightness-110"
+                />
               </div>
-              
             </div>
           </div>
 
           <div className="flex-1 overflow-y-auto space-y-2 custom-scrollbar">
             <button
-        
-        className="w-full flex justify-start items-center group bg-white/5 text-neutral-100 hover:bg-white/10 border border-white/10 h-10 rounded-lg px-4 text-sm"
-        onClick={() => {
-          deleteHistory();
-          setIsOpen(false);
-        }}
-      >
-        <span className="flex gap-2">
-          <SquarePen className='w-5 h-5 text-neutral-300 group-hover:text-emerald-400 transition-colors' />
-          New Chat
-        </span>
-      </button>
+              className="w-full flex justify-start items-center group bg-white/5 text-neutral-100 hover:bg-white/10 border border-white/10 h-10 rounded-lg px-4 text-sm"
+              onClick={() => {
+                deleteHistory();
+                setIsOpen(false);
+              }}
+            >
+              <span className="flex gap-2">
+                <SquarePen className="w-5 h-5 text-neutral-300 group-hover:text-emerald-400 transition-colors" />
+                New Chat
+              </span>
+            </button>
           </div>
 
           <div className="pt-4 border-t border-white/5 space-y-1">
@@ -103,8 +97,9 @@ const DrawerBasic = ({ isOpen, setIsOpen, deleteHistory }) => {
         </div>
       </aside>
 
-      <style dangerouslySetInnerHTML={{
-        __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         .custom-scrollbar::-webkit-scrollbar {
           width: 3px;
         }
@@ -112,7 +107,9 @@ const DrawerBasic = ({ isOpen, setIsOpen, deleteHistory }) => {
           background: rgba(255, 255, 255, 0.05);
           border-radius: 10px;
         }
-      `}} />
+      `,
+        }}
+      />
     </>
   );
 };

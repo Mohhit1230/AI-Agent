@@ -18,7 +18,7 @@
     Function: fetch_transcript, summarize_long_read.
     Daily Use: Instead of watching a 20-minute video, give it the URL and ask: "What were the 5 key takeaways?"
 
-6. LinkedIn / Twitter (X) Intelligence: 🛠️
+6. Twitter (X) Intelligence: 🛠️
     Function: search_people_info, track_trending_topics.
     Daily Use: "Who are the leaders in AI browser automation on Twitter today?"
 
@@ -75,7 +75,7 @@ Daily Use: "Draft a follow-up email to the client about the delayed project"
 Why it matters: Saves 30+ minutes daily on email composition
 
 22. LinkedIn Post Generator
-Function: draft_linkedin_post, suggest_hashtags, analyze_engagement
+Function: search_people_info, draft_linkedin_post, suggest_hashtags, analyze_engagement
 Daily Use: "Turn this achievement into a LinkedIn post"
 Why it matters: Personal branding made effortless
 

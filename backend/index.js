@@ -1,4 +1,3 @@
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -12,20 +11,15 @@ import {
   createPost,
   sendEmail,
   editExistingPDF,
-
   generatePDF,
-  browser_navigate,
-  browser_screenshot,
-  browser_search,
-  browser_click,
-  browser_type,
-  browser_press_key,
-  browser_wait_for,
   calendar_list_events,
   calendar_add_event,
   calendar_view_day,
-  keep_browser_list_notes,
-  keep_browser_create_note,
+  keepListNotes,
+  keepAddNote,
+  keepUpdateNote,
+  keepArchiveNote,
+  keepDeleteNote,
   read_project_file,
   update_code_snippet,
   list_project_files,
@@ -40,19 +34,28 @@ import {
   github_get_repo_stats,
   github_get_user_profile,
 } from "./mcp.tool.js";
+import {
+  browser_navigate,
+  browser_screenshot,
+  browser_search,
+  browser_click,
+  browser_type,
+  browser_press_key,
+  browser_wait_for,
+} from "./tools/pdf/browserTools.js";
 import multer from "multer";
 import { Buffer } from "buffer";
 
 dotenv.config();
 const app = express();
 
-app.use(cors(
-  {
+app.use(
+  cors({
     origin: process.env.FRONTEND_URL, // Adjust this to your frontend URL in production
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
-  }
-));
+  })
+);
 app.use((req, res, next) => {
   if (req.path === "/messages") {
     return next();
@@ -69,8 +72,6 @@ const transports = {};
 
 // Register tools
 
-
-
 mcpServer.tool(
   "createPost",
   "Post on X",
@@ -79,8 +80,6 @@ mcpServer.tool(
   },
   async ({ status }) => createPost(status)
 );
-
-
 
 // mcpServer.tool(
 //   "divetopool",
@@ -94,7 +93,6 @@ mcpServer.tool(
 //     return await generatePDF(payload);
 //   }
 // );
-
 
 mcpServer.tool(
   "givemePDF",
@@ -122,8 +120,6 @@ mcpServer.tool(
   }
 );
 
-
-
 mcpServer.tool(
   "sendEmail",
   "Sends an Email to the specified address",
@@ -148,7 +144,6 @@ mcpServer.tool(
     };
   }
 );
-
 
 mcpServer.tool(
   "browserNavigate",
@@ -230,8 +225,12 @@ mcpServer.tool(
   {
     summary: z.string(),
     description: z.string().optional(),
-    startTime: z.string().describe("ISO 8601 format (e.g., 2023-12-25T10:00:00Z)"),
-    endTime: z.string().describe("ISO 8601 format (e.g., 2023-12-25T11:00:00Z)"),
+    startTime: z
+      .string()
+      .describe("ISO 8601 format (e.g., 2023-12-25T10:00:00Z)"),
+    endTime: z
+      .string()
+      .describe("ISO 8601 format (e.g., 2023-12-25T11:00:00Z)"),
     location: z.string().optional(),
   },
   async ({ summary, description, startTime, endTime, location }) =>
@@ -249,19 +248,50 @@ mcpServer.tool(
 
 mcpServer.tool(
   "keepListNotes",
-  "List notes from Google Keep using the browser",
+  "List notes from Google Keep",
   {},
-  async () => keep_browser_list_notes()
+  async () => keepListNotes()
 );
 
 mcpServer.tool(
   "keepCreateNote",
-  "Create a new note in Google Keep using the browser",
+  "Create a new note in Google Keep",
   {
     title: z.string().optional(),
     text: z.string(),
   },
-  async ({ title, text }) => keep_browser_create_note(title, text)
+  async ({ title, text }) => keepAddNote(title, text)
+);
+
+mcpServer.tool(
+  "keepUpdateNote",
+  "Update an existing note in Google Keep",
+  {
+    id: z.string().describe("The ID of the note to update"),
+    title: z.string().optional().describe("New title for the note"),
+    text: z.string().optional().describe("New text content for the note"),
+  },
+  async ({ id, title, text }) => keepUpdateNote(id, title, text)
+);
+
+mcpServer.tool(
+  "keepArchiveNote",
+  "Archive or unarchive a note in Google Keep",
+  {
+    id: z.string().describe("The ID of the note to archive"),
+    archive: z.boolean().optional().default(true).describe("Whether to archive (true) or unarchive (false)"),
+  },
+  async ({ id, archive }) => keepArchiveNote(id, archive)
+);
+
+mcpServer.tool(
+  "keepDeleteNote",
+  "Delete (move to trash) or restore a note in Google Keep",
+  {
+    id: z.string().describe("The ID of the note to delete"),
+    delete: z.boolean().optional().default(true).describe("Whether to delete (true) or restore (false)"),
+  },
+  async ({ id, delete: delete_note }) => keepDeleteNote(id, delete_note)
 );
 
 mcpServer.tool(
@@ -303,19 +333,32 @@ mcpServer.tool(
   "githubCreateIssue",
   "Create a new issue on a GitHub repository",
   {
-    owner: z.string().describe("The account owner of the repository. The name is not case sensitive."),
-    repo: z.string().describe("The name of the repository without the .git extension. The name is not case sensitive."),
+    owner: z
+      .string()
+      .describe(
+        "The account owner of the repository. The name is not case sensitive."
+      ),
+    repo: z
+      .string()
+      .describe(
+        "The name of the repository without the .git extension. The name is not case sensitive."
+      ),
     title: z.string().describe("The title of the issue."),
     body: z.string().describe("The contents of the issue."),
   },
-  async ({ owner, repo, title, body }) => github_create_issue(owner, repo, title, body)
+  async ({ owner, repo, title, body }) =>
+    github_create_issue(owner, repo, title, body)
 );
 
 mcpServer.tool(
   "gitListCommits",
   "List the latest commits in the repository",
   {
-    count: z.number().optional().default(5).describe("Number of commits to list"),
+    count: z
+      .number()
+      .optional()
+      .default(5)
+      .describe("Number of commits to list"),
   },
   async ({ count }) => git_list_commits(count)
 );
@@ -344,10 +387,17 @@ mcpServer.tool(
     repo: z.string(),
     title: z.string(),
     body: z.string(),
-    head: z.string().describe("The name of the branch where your changes are implemented."),
-    base: z.string().optional().default("main").describe("The name of the branch you want the changes pulled into."),
+    head: z
+      .string()
+      .describe("The name of the branch where your changes are implemented."),
+    base: z
+      .string()
+      .optional()
+      .default("main")
+      .describe("The name of the branch you want the changes pulled into."),
   },
-  async ({ owner, repo, title, body, head, base }) => github_create_pull_request(owner, repo, title, body, head, base)
+  async ({ owner, repo, title, body, head, base }) =>
+    github_create_pull_request(owner, repo, title, body, head, base)
 );
 
 mcpServer.tool(
@@ -369,7 +419,8 @@ mcpServer.tool(
     repo: z.string(),
     state: z.enum(["open", "closed", "all"]).optional().default("open"),
   },
-  async ({ owner, repo, state }) => github_list_pull_requests(owner, repo, state)
+  async ({ owner, repo, state }) =>
+    github_list_pull_requests(owner, repo, state)
 );
 
 mcpServer.tool(
@@ -390,8 +441,6 @@ mcpServer.tool(
   },
   async ({ username }) => github_get_user_profile(username)
 );
-
-
 
 // MCP server SSE route
 app.get("/sse", async (req, res) => {
@@ -519,6 +568,14 @@ app.post("/chat", async (req, res) => {
 - Never robotic or overly formal
 - Avoid filler phrases like "Would you like me to…" — if you know the next step, just do it
 
+## TOKEN EFFICIENCY (CRITICAL)
+- **Be concise**: Give point-to-point answers. No fluff, no padding.
+- **Never ask follow-up questions** unless absolutely required (like missing critical info).
+- **Skip pleasantries**: No "Great question!" or "Happy to help!"
+- **Direct answers**: State the answer first, then brief explanation if needed.
+- **Avoid repetition**: Don't restate the question or summarize what you already said.
+- **Single response**: Complete the entire answer in one go.
+
 ## REASONING RULES
 - Always read the *exact wording* of a question carefully — assume tricky phrasing
 - For math, do all calculations step-by-step digit-by-digit
@@ -581,7 +638,6 @@ app.post("/chat", async (req, res) => {
       ],
     });
 
-
     const tools = (await mcpClient.listTools()).tools.map((tool) => ({
       name: tool.name,
       description: tool.description,
@@ -598,12 +654,12 @@ app.post("/chat", async (req, res) => {
     let lastToolResult = null;
 
     while (loopCount < MAX_LOOPS) {
-      if (loopCount > 0) await new Promise(r => setTimeout(r, 200));
+      if (loopCount > 0) await new Promise((r) => setTimeout(r, 200));
 
       const response = await ai.models.generateContent({
         model: process.env.GEMINI_MODEL,
         contents: currentMessages,
-        config: { tools: [{ functionDeclarations: tools }] }
+        config: { tools: [{ functionDeclarations: tools }] },
       });
 
       const candidate = response?.candidates?.[0];
@@ -619,7 +675,10 @@ app.post("/chat", async (req, res) => {
       if (part.functionCall) {
         const toolCall = part.functionCall;
         console.log(`[Loop ${loopCount}] calling tool: `, toolCall.name);
-        console.log(`[Loop ${loopCount}] tool arguments: `, JSON.stringify(toolCall.args, null, 2));
+        console.log(
+          `[Loop ${loopCount}] tool arguments: `,
+          JSON.stringify(toolCall.args, null, 2)
+        );
 
         try {
           const toolResult = await mcpClient.callTool({
@@ -628,28 +687,35 @@ app.post("/chat", async (req, res) => {
           });
 
           lastToolResult = toolResult.content;
-          console.log(`[Loop ${loopCount}] tool result: `, JSON.stringify(toolResult.content, null, 2).substring(0, 100));
+          console.log(
+            `[Loop ${loopCount}] tool result: `,
+            JSON.stringify(toolResult.content, null, 2).substring(0, 100)
+          );
 
           // Format tool response for Gemini
           currentMessages.push({
             role: "function",
-            parts: [{
-              functionResponse: {
-                name: toolCall.name,
-                response: { content: toolResult.content }
-              }
-            }]
+            parts: [
+              {
+                functionResponse: {
+                  name: toolCall.name,
+                  response: { content: toolResult.content },
+                },
+              },
+            ],
           });
         } catch (err) {
           console.error(`[Loop ${loopCount}] Tool call failed:`, err);
           currentMessages.push({
             role: "function",
-            parts: [{
-              functionResponse: {
-                name: toolCall.name,
-                response: { error: err.message }
-              }
-            }]
+            parts: [
+              {
+                functionResponse: {
+                  name: toolCall.name,
+                  response: { error: err.message },
+                },
+              },
+            ],
           });
         }
         loopCount++;
@@ -659,17 +725,19 @@ app.post("/chat", async (req, res) => {
 
         // Attach screenshot if it was the last tool call or if we stopped
         if (lastToolResult && Array.isArray(lastToolResult)) {
-          const imagePart = lastToolResult.find(c => c.type === "image");
+          const imagePart = lastToolResult.find((c) => c.type === "image");
           if (imagePart) {
             // Send image as structured data instead of embedding in text
             responseData = {
               type: "image",
               data: `data:${imagePart.mimeType};base64,${imagePart.data}`,
-              text: part.text
+              text: part.text,
             };
           }
 
-          const resourceLink = lastToolResult.find(c => c.type === "resource_link");
+          const resourceLink = lastToolResult.find(
+            (c) => c.type === "resource_link"
+          );
           if (resourceLink) {
             responseData.text = resourceLink;
           }
@@ -679,12 +747,18 @@ app.post("/chat", async (req, res) => {
       }
     }
 
-    return res.json({ data: { text: "⚠️ Maximum automation steps reached. Please check the browser window." } });
+    return res.json({
+      data: {
+        text: "⚠️ Maximum automation steps reached. Please check the browser window.",
+      },
+    });
   } catch (err) {
     console.log("❌ Proxy error:", err);
     if (err.status === 429 || err.message?.includes("429")) {
       return res.status(429).json({
-        data: { text: "⚠️ **Quota Exceeded (429)**: The AI is getting too many requests. Please wait a minute and try again!" }
+        data: {
+          text: "⚠️ **Quota Exceeded (429)**: The AI is getting too many requests. Please wait a minute and try again!",
+        },
       });
     }
     res.status(500).json({ error: err.message });
@@ -705,10 +779,3 @@ app.listen(4000, async () => {
     console.error("❌ MCP client connection failed:", err);
   }
 });
-
-
-
-
-
-
-
