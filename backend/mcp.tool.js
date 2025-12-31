@@ -5,6 +5,7 @@ import { keep_add_note, keep_archive_note, keep_delete_note, keep_list_notes, ke
 import { add_event, list_events, view_day } from "./tools/google/calender_api.js";
 import { list_files, read_file, update_code } from "./tools/localFileSys.js";
 import { check_status, commit_all, create_issue, create_pull_request, get_repo_stats, get_user_profile, list_commits, list_issues, list_pull_requests, push } from "./tools/github_tools.js";
+import { fetch_transcript, summarize_article, extract_key_points } from "./tools/contentSummarizer.js";
 import { config } from "dotenv";
 config();
 
@@ -28,7 +29,7 @@ export function generatePDF(content) {
 }
 
 // Google Calender 
-export function calendar_list_events(maxResults = 10){
+export function calendar_list_events(maxResults = 10) {
   return list_events(maxResults = 10);
 }
 
@@ -38,15 +39,15 @@ export function calendar_add_event(
   startTime,
   endTime,
   location = ""
-){
+) {
   return add_event(summary,
-  description,
-  startTime,
-  endTime,
-  location = "");
+    description,
+    startTime,
+    endTime,
+    location = "");
 }
 
-export function calendar_view_day(date){
+export function calendar_view_day(date) {
   return view_day(date);
 }
 
@@ -100,7 +101,7 @@ export function git_list_commits(count = 10) {
   return list_commits(count = 10);
 }
 export function git_commit_all(message) {
- return commit_all(message);
+  return commit_all(message);
 }
 
 export function git_push() {
@@ -116,11 +117,11 @@ export function github_create_pull_request(
   base = "main"
 ) {
   return create_pull_request(owner,
-  repo,
-  title,
-  body,
-  head,
-  base = "main");
+    repo,
+    title,
+    body,
+    head,
+    base = "main");
 }
 
 export function github_list_issues(owner, repo, state = "open") {
@@ -137,4 +138,17 @@ export function github_get_repo_stats(owner, repo) {
 
 export function github_get_user_profile(username) {
   return get_user_profile(username);
+}
+
+// CONTENT SUMMARIZER TOOLS
+export function youtube_fetch_transcript(url) {
+  return fetch_transcript(url);
+}
+
+export function article_summarize(url) {
+  return summarize_article(url);
+}
+
+export function content_extract_key_points(input, numPoints = 5) {
+  return extract_key_points(input, numPoints);
 }

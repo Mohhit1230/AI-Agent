@@ -13,6 +13,7 @@
   "dependencies": {
     "@google/genai": "^1.8.0",
     "@modelcontextprotocol/sdk": "^1.15.0",
+    "axios": "^1.13.2",
     "cors": "^2.8.5",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",

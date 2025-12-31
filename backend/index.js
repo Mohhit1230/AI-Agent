@@ -34,6 +34,9 @@ import {
   github_list_pull_requests,
   github_get_repo_stats,
   github_get_user_profile,
+  youtube_fetch_transcript,
+  article_summarize,
+  content_extract_key_points,
 } from "./mcp.tool.js";
 import {
   browser_navigate,
@@ -443,6 +446,35 @@ mcpServer.tool(
   async ({ username }) => github_get_user_profile(username)
 );
 
+// CONTENT SUMMARIZER TOOLS
+mcpServer.tool(
+  "youtubeGetTranscript",
+  "Fetch the transcript/captions from a YouTube video URL. Use this to get the full text content of any YouTube video for summarization or analysis.",
+  {
+    url: z.string().url().describe("The YouTube video URL (supports youtube.com/watch, youtu.be, shorts, etc.)"),
+  },
+  async ({ url }) => youtube_fetch_transcript(url)
+);
+
+mcpServer.tool(
+  "articleSummarize",
+  "Fetch and extract the main content from an article or webpage URL. Removes navigation, ads, and other clutter to get the core text.",
+  {
+    url: z.string().url().describe("The article or webpage URL to extract content from"),
+  },
+  async ({ url }) => article_summarize(url)
+);
+
+mcpServer.tool(
+  "extractKeyPoints",
+  "Extract key takeaways and important points from text, a YouTube video, or an article URL. Returns content ready for AI summarization.",
+  {
+    input: z.string().describe("Either a URL (YouTube or article) or raw text to extract key points from"),
+    numPoints: z.number().optional().default(5).describe("Number of key points to extract (default: 5)"),
+  },
+  async ({ input, numPoints }) => content_extract_key_points(input, numPoints)
+);
+
 // MCP server SSE route
 app.get("/sse", async (req, res) => {
   const transport = new SSEServerTransport("/messages", res);
@@ -591,6 +623,17 @@ const SYSTEM_PROMPT = `You must respond in the exact style, tone, and structure 
 - Use \`githubGetRepoStats\` and \`githubGetUserProfile\` for research.
 - **Workflow Strategy**: If a user says "Commit and push", call \`gitCommitAll\` first, then \`gitPush\`.
 - **Proactive Issue Research**: If a user asks about a repo, check its stats and issues to provide a complete picture.
+
+## YOUTUBE & ARTICLE SUMMARIZER PROTOCOLS
+- Use \`youtubeGetTranscript\` when a user shares a YouTube URL and asks for a summary, key points, or information about the video.
+- Use \`articleSummarize\` when a user shares an article/webpage URL and wants the content extracted or summarized.
+- Use \`extractKeyPoints\` when a user specifically asks for "key takeaways", "important points", or "main ideas" from any content.
+- **Immediate Execution**: When given a YouTube or article URL with a summarization request, call the appropriate tool immediately. Don't ask for confirmation.
+- **Format Output**: After getting the transcript/content, provide a well-structured summary with:
+  - 📌 **Key Takeaways** (numbered list)
+  - 📝 **Brief Summary** (2-3 sentences)
+  - 💡 **Main Insights** (if applicable)
+- **Time-Saving Approach**: Emphasize how the summary saves time vs. watching/reading the full content.
 `;
 
 // Convert MCP tools to OpenAI format

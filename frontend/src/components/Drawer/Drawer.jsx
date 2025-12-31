@@ -88,7 +88,7 @@ const DrawerBasic = ({ isOpen, setIsOpen, deleteHistory }) => {
               rel="noreferrer"
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition-all group"
             >
-              <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-400 group-hover:bg-purple-500/20 transition-colors">
+              <div className="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 group-hover:bg-cyan-500/20 transition-colors">
                 <ExternalLink className="h-4 w-4" />
               </div>
               <span className="text-sm font-bold">Repository</span>

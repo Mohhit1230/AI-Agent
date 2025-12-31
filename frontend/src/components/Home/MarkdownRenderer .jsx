@@ -40,7 +40,7 @@ const MarkdownRenderer = ({ content }) => {
           ),
           ol: ({ ...props }) => (
             <ol
-              className="list-decimal list-inside ml-5 my-2 text-xs tracking-wider "
+              className="list-decimal list-inside  ml-5 my-2 text-xs tracking-wider "
               {...props}
             />
           ),

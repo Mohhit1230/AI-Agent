@@ -169,13 +169,12 @@ const Home = ({ showPreloader }) => {
   return (
     <>
       <div
-        className={`flex  min-h-screen ${
-          showPreloader ? "h-screen overflow-hidden" : ""
-        }`}
+        className={`flex  min-h-screen ${showPreloader ? "h-screen overflow-hidden" : ""
+          }`}
       >
         <div className="fixed inset-0 pointer-events-none">
           <div className="absolute top-[-20%] left-[-4%] w-[40%] h-[40%] bg-emerald-500/10 blur-[60px] rounded-full" />
-          <div className="absolute bottom-[-10%] right-[-20%] w-[40%] h-[40%] bg-purple-500/10 blur-[60px] rounded-full" />
+          <div className="absolute bottom-[-10%] right-[-20%] w-[40%] h-[40%] bg-cyan-500/10 blur-[60px] rounded-full" />
         </div>
 
         <DrawerBasic
@@ -201,10 +200,13 @@ const Home = ({ showPreloader }) => {
               </div>
 
               {/* Center: Model Status */}
-              <div className="flex items-center justify-center">
-                <span className="bg-emerald-500/5 text-emerald-400 border-emerald-500/20 px-4 py-1.5 font-bold uppercase tracking-widest text-[10px] whitespace-nowrap inline-flex items-center rounded-full border  text-xs">
+              <div className="flex items-center justify-center gap-2">
+                <span className="bg-emerald-500/5 text-emerald-400 border-emerald-500/20 px-4 py-1.5 font-bold uppercase tracking-widest text-[10px] whitespace-nowrap inline-flex items-center rounded-full border text-xs">
                   <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse" />
-                  Gemini-2.5-flash
+                  OpenAI o3-mini
+                </span>
+                <span className="hidden sm:inline-flex bg-cyan-500/5 text-cyan-400 border-cyan-500/20 px-3 py-1.5 font-bold uppercase tracking-widest text-[9px] whitespace-nowrap items-center rounded-full border">
+                  + Gemini Fallback
                 </span>
               </div>
 
@@ -261,9 +263,8 @@ const Home = ({ showPreloader }) => {
                     {history.map((m, i) => (
                       <li
                         key={i}
-                        className={`flex w-full items-start gap-3 ${
-                          m.role === "user" ? "justify-end" : "justify-start"
-                        }`}
+                        className={`flex w-full items-start gap-3 ${m.role === "user" ? "justify-end" : "justify-start"
+                          }`}
                       >
                         {/* Selection Checkbox - Left side for model, right handled by flex-row-reverse */}
                         {selectMode && m.role !== "user" && (
@@ -279,15 +280,13 @@ const Home = ({ showPreloader }) => {
                           </button>
                         )}
                         <div
-                          className={`relative max-w-[90%] md:max-w-[85%] group ${
-                            m.role === "user"
-                              ? "bg-[#282a2c] text-[#e7e5e5] shadow-lg rounded-2xl px-4 py-2 break-words whitespace-pre-wrap"
-                              : "text-[#e1e1e1] w-full"
-                          } ${
-                            selectMode && selectedMessages.has(i)
-                              ? "ring-1 ring-red-500/50 rounded-xl"
+                          className={`relative max-w-[90%] md:max-w-[85%] group ${m.role === "user"
+                            ? "bg-[#282a2c] text-[#e7e5e5] shadow-lg rounded-2xl px-4 py-2 break-words whitespace-pre-wrap"
+                            : "text-[#e1e1e1] w-full"
+                            } ${selectMode && selectedMessages.has(i)
+                              ? "ring-1 ring-red-500/40 rounded-xl"
                               : ""
-                          }`}
+                            }`}
                           onClick={
                             selectMode
                               ? () => toggleMessageSelection(i)
@@ -433,11 +432,10 @@ const Home = ({ showPreloader }) => {
                             );
                           })()}
                           <div
-                            className={`absolute ${
-                              m.role === "model"
-                                ? "left-0 -bottom-8"
-                                : "right-0 -bottom-10"
-                            } flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10 pr-2 pb-2`}
+                            className={`absolute ${m.role === "model"
+                              ? "left-0 -bottom-8"
+                              : "right-0 -bottom-10"
+                              } flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10 pr-2 pb-2`}
                           >
                             <CopyButton
                               text={
@@ -487,7 +485,7 @@ const Home = ({ showPreloader }) => {
             </div>
 
             {/* Input Fixed Bottom Overlay (ChatGPT Style) */}
-            <div className="fixed bottom-0 left-0 lg:left-auto right-0 lg:w-[calc(100%-260px)] z-20 bg-gradient-to-t from-[#0f1115] via-[#0f1115]/90 to-transparent pt-12 pb-8 px-4 md:px-6 pointer-events-none">
+            <div className="fixed bottom-0 left-0 lg:left-auto right-0 lg:w-[calc(100%-260px)] z-20 bg-gradient-to-t from-[#0f1115] via-[#0f1115]/90 to-transparent pt-12 pb-1 px-4 md:px-6 pointer-events-none">
               <div className="max-w-3xl mx-auto w-full pointer-events-auto">
                 <div className="relative group">
                   <textarea
@@ -501,7 +499,7 @@ const Home = ({ showPreloader }) => {
                     placeholder="Ask anything ..."
                     spellCheck={false}
                     autoComplete="off"
-                    className="w-full bg-[#1e2025] text-white rounded-2xl border border-white/10 px-4 py-4 pr-14 text-sm outline-none resize-none h-14 max-h-40 focus:border-emerald-500/30 transition-colors shadow-2xl placeholder:tracking-wider"
+                    className="w-full bg-[#1e2025] text-white rounded-2xl border border-white/10 px-4 py-4 pr-14 text-sm outline-none resize-none h-14 max-h-40 focus:border-cyan-500/30 transition-colors shadow-2xl placeholder:tracking-wider"
                   />
                   <div className="absolute right-3.5 bottom-5.5">
                     {loading ? (
@@ -533,8 +531,8 @@ const Home = ({ showPreloader }) => {
                 </button>
 
                 <p className="text-[10px] text-center text-neutral-500 mt-3 font-medium tracking-tight">
-                  Prosperity Agent may display inaccurate info, including about
-                  people, so double-check its responses.
+                  Prosperity Agent (OpenAI + Gemini) may display inaccurate info,
+                  so double-check important responses.
                 </p>
               </div>
             </div>

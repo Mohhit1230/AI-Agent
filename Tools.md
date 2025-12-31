@@ -14,8 +14,8 @@
     Function: git_status, git_commit, git_push, github_issue, github_pr, github_repo_stats.
     Daily Use: "Commit my changes and push to main" or "Look up the most starred AI repos on GitHub today."
 
-5. YouTube / Article Summarizer: 💡
-    Function: fetch_transcript, summarize_long_read.
+5. YouTube / Article Summarizer: ✅
+    Function: youtubeGetTranscript, articleSummarize, extractKeyPoints
     Daily Use: Instead of watching a 20-minute video, give it the URL and ask: "What were the 5 key takeaways?"
 
 6. Twitter (X) Intelligence: 🛠️
@@ -99,3 +99,8 @@ Uses Gemini Vision API
 35. Smart Clipboard Manager
 Remembers everything you copy, makes it searchable
 "Find that API key I copied yesterday"
+
+
+36. Kroki.io text to diagram converter
+Function: text_to_diagram
+Daily Use: "Convert this text to a diagram"
