@@ -3,7 +3,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { GoogleGenAI } from "@google/genai";
 import OpenAI from "openai";
-import Anthropic from "@anthropic-ai/sdk";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -44,7 +43,7 @@ import {
   browser_type,
   browser_press_key,
   browser_wait_for,
-} from "./tools/pdf/browserTools.js";
+} from "./tools/browserTools.js";
 import multer from "multer";
 import { Buffer } from "buffer";
 
@@ -483,13 +482,8 @@ app.post("/messages", async (req, res) => {
 /* ------------------------ MULTI-PROVIDER AI SETUP ------------------------ */
 
 // Initialize all AI providers
+const openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const geminiAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-const openaiClient = process.env.OPENAI_API_KEY
-  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-  : null;
-const anthropicClient = process.env.CLAUDE_API_KEY
-  ? new Anthropic({ apiKey: process.env.CLAUDE_API_KEY })
-  : null;
 
 const mcpClient = new Client({ name: "client-proxy", version: "1.0.0" });
 
@@ -615,18 +609,7 @@ function convertToolsForOpenAI(mcpTools) {
   }));
 }
 
-// Convert MCP tools to Claude format
-function convertToolsForClaude(mcpTools) {
-  return mcpTools.map((tool) => ({
-    name: tool.name,
-    description: tool.description,
-    input_schema: {
-      type: tool.inputSchema.type || "object",
-      properties: tool.inputSchema.properties || {},
-      required: tool.inputSchema.required || [],
-    },
-  }));
-}
+
 
 // Convert MCP tools to Gemini format
 function convertToolsForGemini(mcpTools) {
@@ -691,56 +674,7 @@ function convertMessagesForOpenAI(geminiMessages) {
   return openaiMessages;
 }
 
-// Convert Gemini-format messages to Claude format
-function convertMessagesForClaude(geminiMessages) {
-  const claudeMessages = [];
 
-  for (const msg of geminiMessages) {
-    if (!msg.role || !msg.parts) continue;
-
-    for (const part of msg.parts) {
-      if (part.text) {
-        claudeMessages.push({
-          role: msg.role === "model" ? "assistant" : msg.role,
-          content: part.text,
-        });
-      } else if (part.functionCall) {
-        claudeMessages.push({
-          role: "assistant",
-          content: [{
-            type: "tool_use",
-            id: `toolu_${Date.now()}`,
-            name: part.functionCall.name,
-            input: part.functionCall.args || {},
-          }],
-        });
-      } else if (part.functionResponse) {
-        claudeMessages.push({
-          role: "user",
-          content: [{
-            type: "tool_result",
-            tool_use_id: `toolu_${Date.now()}`,
-            content: JSON.stringify(part.functionResponse.response || {}),
-          }],
-        });
-      } else if (part.inlineData) {
-        claudeMessages.push({
-          role: msg.role === "model" ? "assistant" : msg.role,
-          content: [{
-            type: "image",
-            source: {
-              type: "base64",
-              media_type: part.inlineData.mimeType,
-              data: part.inlineData.data,
-            },
-          }],
-        });
-      }
-    }
-  }
-
-  return claudeMessages;
-}
 
 // OpenAI Provider
 async function callOpenAI(messages, tools, mcpClientRef) {
@@ -761,7 +695,7 @@ async function callOpenAI(messages, tools, mcpClientRef) {
     if (loopCount > 0) await new Promise((r) => setTimeout(r, 200));
 
     const response = await openaiClient.chat.completions.create({
-      model: process.env.OPENAI_MODEL || "o3-mini",
+      model: process.env.OPENAI_MODEL,
       messages: currentMessages,
       tools: openaiTools.length > 0 ? openaiTools : undefined,
     });
@@ -812,80 +746,7 @@ async function callOpenAI(messages, tools, mcpClientRef) {
   return { text: "⚠️ Maximum automation steps reached.", lastToolResult, provider: "openai" };
 }
 
-// Claude Provider
-async function callClaude(messages, tools, mcpClientRef) {
-  if (!anthropicClient) throw new Error("Claude not configured");
 
-  const claudeMessages = convertMessagesForClaude(messages);
-  const claudeTools = convertToolsForClaude((await mcpClientRef.listTools()).tools);
-
-  let currentMessages = [...claudeMessages];
-  let loopCount = 0;
-  const MAX_LOOPS = 10;
-  let lastToolResult = null;
-
-  while (loopCount < MAX_LOOPS) {
-    if (loopCount > 0) await new Promise((r) => setTimeout(r, 200));
-
-    const response = await anthropicClient.messages.create({
-      model: process.env.CLAUDE_MODEL || "claude-3-5-haiku-latest",
-      max_tokens: 4096,
-      system: SYSTEM_PROMPT,
-      messages: currentMessages,
-      tools: claudeTools.length > 0 ? claudeTools : undefined,
-    });
-
-    const content = response.content;
-    const stopReason = response.stop_reason;
-
-    // Add assistant response to messages
-    currentMessages.push({ role: "assistant", content });
-
-    if (stopReason === "tool_use") {
-      const toolUseBlocks = content.filter((block) => block.type === "tool_use");
-      const toolResults = [];
-
-      for (const toolUse of toolUseBlocks) {
-        console.log(`[Claude Loop ${loopCount}] calling tool: `, toolUse.name);
-        console.log(`[Claude Loop ${loopCount}] tool arguments: `, JSON.stringify(toolUse.input, null, 2));
-
-        try {
-          const toolResult = await mcpClientRef.callTool({
-            name: toolUse.name,
-            arguments: toolUse.input,
-          });
-
-          lastToolResult = toolResult.content;
-          console.log(`[Claude Loop ${loopCount}] tool result: `, JSON.stringify(toolResult.content, null, 2).substring(0, 100));
-
-          toolResults.push({
-            type: "tool_result",
-            tool_use_id: toolUse.id,
-            content: JSON.stringify(toolResult.content),
-          });
-        } catch (err) {
-          console.error(`[Claude Loop ${loopCount}] Tool call failed:`, err);
-          toolResults.push({
-            type: "tool_result",
-            tool_use_id: toolUse.id,
-            content: JSON.stringify({ error: err.message }),
-            is_error: true,
-          });
-        }
-      }
-
-      currentMessages.push({ role: "user", content: toolResults });
-      loopCount++;
-    } else {
-      // Final response - extract text
-      const textBlocks = content.filter((block) => block.type === "text");
-      const text = textBlocks.map((block) => block.text).join("\n");
-      return { text, lastToolResult, provider: "claude" };
-    }
-  }
-
-  return { text: "⚠️ Maximum automation steps reached.", lastToolResult, provider: "claude" };
-}
 
 // Gemini Provider
 async function callGemini(messages, tools, mcpClientRef) {
@@ -964,11 +825,10 @@ async function callGemini(messages, tools, mcpClientRef) {
   return { text: "⚠️ Maximum automation steps reached.", lastToolResult, provider: "gemini" };
 }
 
-// Main AI caller with fallback: OpenAI → Claude → Gemini
+// Main AI caller with fallback: OpenAI → Gemini
 async function callAIWithFallback(messages, mcpClientRef) {
   const providers = [
     { name: "OpenAI", fn: callOpenAI, available: !!openaiClient },
-    { name: "Claude", fn: callClaude, available: !!anthropicClient },
     { name: "Gemini", fn: callGemini, available: true }, // Gemini is always available
   ];
 
@@ -1044,7 +904,7 @@ app.post("/chat", async (req, res) => {
       return res.status(400).json({ error: "No valid message parts found." });
     }
 
-    // Call AI with fallback (OpenAI → Claude → Gemini)
+    // Call AI with fallback (OpenAI → Gemini)
     const result = await callAIWithFallback(messages, mcpClient);
 
     // Build response data
@@ -1099,9 +959,8 @@ app.listen(4000, async () => {
   // Log which AI providers are available
   console.log("\n📡 AI Provider Status:");
   console.log(`   OpenAI:  ${openaiClient ? "✅ Configured" : "❌ Not configured (set OPENAI_API_KEY)"}`);
-  console.log(`   Claude:  ${anthropicClient ? "✅ Configured" : "❌ Not configured (set CLAUDE_API_KEY)"}`);
   console.log(`   Gemini:  ${process.env.GEMINI_API_KEY ? "✅ Configured" : "❌ Not configured (set GEMINI_API_KEY)"}`);
-  console.log(`   Priority: OpenAI → Claude → Gemini\n`);
+  console.log(`   Priority: OpenAI → Gemini\n`);
 
   try {
     await mcpClient.connect(
