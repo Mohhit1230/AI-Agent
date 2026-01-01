@@ -247,30 +247,28 @@ const About = () => {
       </nav>
 
       <main className="relative z-10 max-w-6xl mx-auto px-6 py-20 mt-20">
-        {/* Hero Section */}
         <section className="mb-32">
           <div className="hero-content inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-emerald-500/5 border border-emerald-500/10 mb-10 hover:border-emerald-500/30 transition-colors">
             <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
             <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">
-              Multi-Provider AI Engine
+              Next-Gen Autonomous Agent
             </span>
           </div>
 
           <h1 className="hero-content text-6xl md:text-8xl font-sans font-black tracking-tight text-white mb-8 leading-[0.9]">
-            Advanced <br /> AI{" "}
+            Unified <br /> AI{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">
-              Workspace.
+              Intelligence.
             </span>
           </h1>
 
           <p className="hero-content max-w-2xl text-lg font-sans text-slate-400 leading-relaxed font-medium">
-            Prosperity Agent is a unified intelligence layer built with the MERN
-            stack. It transcends simple chat by integrating{" "}
-            <span className="text-white">browser automation</span>,{" "}
-            <span className="text-white">document generation</span>, and{" "}
-            <span className="text-white">real-world actions</span> — powered by
-            <span className="text-emerald-400"> OpenAI</span> with{" "}
-            <span className="text-cyan-400">Gemini</span> fallback.
+            Prosperity Agent is a sophisticated workspace designed for high-performance automation.
+            It merges <span className="text-white">autonomous web navigation</span>,{" "}
+            <span className="text-white">real-time codebase management</span>, and{" "}
+            <span className="text-white">intelligent summarization</span> into a single, seamless interaction layer —
+            powered by <span className="text-emerald-400">OpenAI o3-mini</span> with
+            redundant failover to <span className="text-cyan-400">Gemini 2.5 Flash</span>.
           </p>
         </section>
 
@@ -428,20 +426,20 @@ const About = () => {
                       <div className="scanner-shimmer absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/5 to-transparent -translate-x-full" />
 
                       <div className="relative z-10">
-                         <div
-                    className={` ${cat.color === "emerald"
-                      ? "text-emerald-500/50 group-hover:text-emerald-400"
-                      : cat.color === "blue"
-                        ? "text-blue-500/50 group-hover:text-blue-400"
-                        : cat.color === "orange"
-                          ? "text-orange-500/50 group-hover:text-orange-400"
-                          : cat.color === "red"
-                            ? "text-red-500/50 group-hover:text-red-400"
-                            : "text-cyan-500/50 group-hover:text-cyan-400"
-                      }`}
-                  >
-                    <item.icon className="h-4 w-4 group-hover:scale-110 transition-all mb-2" />
-                  </div>
+                        <div
+                          className={` ${cat.color === "emerald"
+                            ? "text-emerald-500/50 group-hover:text-emerald-400"
+                            : cat.color === "blue"
+                              ? "text-blue-500/50 group-hover:text-blue-400"
+                              : cat.color === "orange"
+                                ? "text-orange-500/50 group-hover:text-orange-400"
+                                : cat.color === "red"
+                                  ? "text-red-500/50 group-hover:text-red-400"
+                                  : "text-cyan-500/50 group-hover:text-cyan-400"
+                            }`}
+                        >
+                          <item.icon className="h-4 w-4 group-hover:scale-110 transition-all mb-2" />
+                        </div>
                         <h4 className="text-sm font-bold text-white mb-1 group-hover:text-emerald-300 transition-colors">
                           {item.title}
                         </h4>
@@ -497,7 +495,7 @@ const About = () => {
             </div>
 
             <div className="relative">
-              
+
               <div className="relative p-4 py-3 rounded-3xl  border border-cyan-500/50 bg-cyan-500/5 group-hover:border-cyan-500/0 group-hover:bg-emerald-950/0 transition-all duration-500 scale-110">
                 <img
                   src="/logo1.webp"

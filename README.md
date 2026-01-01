@@ -45,8 +45,8 @@ Full integration with Google productivity tools:
 - **Resource Linking:** Download links are provided for every generated file
 
 <p align="center">
-  <img src="docs/images/pdf_gen.png" width="45%" />
-  <img src="docs/images/pdf_preview.png" width="45%" />
+  <img src="docs/images/pdf_gen.png" width="45%" alt="PDF Generation" />
+  <img src="docs/images/pdf_preview.png" width="45%" alt="PDF Preview" />
 </p>
 
 ### 📧 Communication & Socials

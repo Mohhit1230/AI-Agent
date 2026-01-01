@@ -3,10 +3,9 @@ import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
-// Create axios instance with credentials (for cookies)
 const api = axios.create({
     baseURL: `${API_URL}/api/auth`,
-    withCredentials: true, // Important: This sends cookies with requests
+    withCredentials: true, 
 });
 
 // Response interceptor to handle token refresh

@@ -6,149 +6,419 @@ import { add_event, list_events, view_day } from "./tools/google/calender_api.js
 import { list_files, read_file, update_code } from "./tools/localFileSys.js";
 import { check_status, commit_all, create_issue, create_pull_request, get_repo_stats, get_user_profile, list_commits, list_issues, list_pull_requests, push } from "./tools/github_tools.js";
 import { fetch_transcript, summarize_article, extract_key_points } from "./tools/contentSummarizer.js";
-import { config } from "dotenv";
-config();
-
-// TWITTER
-export function createPost(status) {
-  return twitterPost(status);
-}
-// SEND EMAIL
-export function sendEmail({ to, subject, text }) {
-  return email({ to, subject, text });
-}
-
-// Edit PDF
-export function editExistingPDF(fileBuffer, newText) {
-  return editPDF(fileBuffer, newText);
-}
-
-// PDF Generation
-export function generatePDF(content) {
-  return generatePdf(content);
-}
-
-// Google Calender 
-export function calendar_list_events(maxResults = 10) {
-  return list_events(maxResults = 10);
-}
-
-export function calendar_add_event(
-  summary,
-  description,
-  startTime,
-  endTime,
-  location = ""
-) {
-  return add_event(summary,
-    description,
-    startTime,
-    endTime,
-    location = "");
-}
-
-export function calendar_view_day(date) {
-  return view_day(date);
-}
+import { text_to_diagram } from "./tools/textToDiagram.js";
+import { mcpServer } from "./config/mcpServer.js";
+import { z } from "zod";
+import {
+  browser_navigate,
+  browser_screenshot,
+  browser_search,
+  browser_click,
+  browser_type,
+  browser_press_key,
+  browser_wait_for,
+} from "./tools/browserTools.js";
 
 
-
-// Google Keep Tools
-export function keepListNotes() {
-  return keep_list_notes();
-}
-
-export function keepAddNote(title, text) {
-  return keep_add_note(title, text);
-}
-
-export function keepUpdateNote(id, title, text) {
-  return keep_update_note(id, title, text);
-}
-
-export function keepArchiveNote(id, archive) {
-  return keep_archive_note(id, archive);
-}
-
-export function keepDeleteNote(id, delete_note) {
-  return keep_delete_note(id, delete_note);
-}
-
-// Local File System Reader/Writer
-export function read_project_file(filePath) {
-  return read_file(filePath);
-}
-
-export function update_code_snippet(filePath, content) {
-  return update_code(filePath, content);
-}
-
-export function list_project_files(dirPath) {
-  return list_files(dirPath);
-}
+// Register tools
 
 
-// GITHUB TOOLS
-export function git_check_status() {
-  return check_status();
-}
+mcpServer.tool(
+  "createPost",
+  "Post on X",
+  {
+    status: z.string(),
+  },
+  async ({ status }) => twitterPost(status)
+);
 
-export function github_create_issue(owner, repo, title, body) {
-  return create_issue(owner, repo, title, body);
-}
+mcpServer.tool(
+  "givemePDF",
+  "Generate a PDF from text",
+  {
+    text: z.string(),
+  },
+  async ({ text }) => {
+    // Wrap text in array as expected by Python: [{"type":"text","text":"..."}]
+    const payload = JSON.stringify([{ type: "text", text }]);
+    try {
+      const result = await generatePdf(payload);
+      return result; // MCP expects { content: [...] }
+    } catch (err) {
+      console.error("Error generating PDF:", err);
+      return {
+        content: [
+          {
+            type: "text",
+            text: "❌ Failed to generate PDF",
+          },
+        ],
+      };
+    }
+  }
+);
 
-export function git_list_commits(count = 10) {
-  return list_commits(count = 10);
-}
-export function git_commit_all(message) {
-  return commit_all(message);
-}
+mcpServer.tool(
+  "sendEmail",
+  "Sends an Email to the specified address",
+  {
+    to: z.string(),
+    subject: z.string(),
+    text: z.string(),
+  },
+  async ({ to, subject, text }) => email({ to, subject, text })
+);
+mcpServer.tool(
+  "editPDF",
+  "Edit uploaded PDF and add text",
+  {
+    file: z.instanceof(Uint8Array),
+    text: z.string(),
+  },
+  async ({ file, text }) => {
+    const buffer = await editPDF(file, text);
+    return {
+      content: [{ type: "file_data", name: "edited.pdf", data: buffer }],
+    };
+  }
+);
 
-export function git_push() {
-  return push();
-}
+mcpServer.tool(
+  "browserNavigate",
+  "Navigate to a URL and get page content",
+  {
+    url: z.string().url(),
+  },
+  async ({ url }) => browser_navigate(url)
+);
 
-export function github_create_pull_request(
-  owner,
-  repo,
-  title,
-  body,
-  head,
-  base = "main"
-) {
-  return create_pull_request(owner,
-    repo,
-    title,
-    body,
-    head,
-    base = "main");
-}
+mcpServer.tool(
+  "browserScreenshot",
+  "Take a screenshot of a specific URL or the current active page if no URL is provided",
+  {
+    url: z.string().url().optional(),
+  },
+  async ({ url }) => browser_screenshot(url)
+);
 
-export function github_list_issues(owner, repo, state = "open") {
-  return list_issues(owner, repo, state = "open");
-}
+mcpServer.tool(
+  "browserSearch",
+  "Search Google for a query",
+  {
+    query: z.string(),
+  },
+  async ({ query }) => browser_search(query)
+);
 
-export function github_list_pull_requests(owner, repo, state = "open") {
-  return list_pull_requests(owner, repo, state = "open");
-}
+mcpServer.tool(
+  "browserClick",
+  "Click an element on the active page",
+  {
+    selector: z.string(),
+  },
+  async ({ selector }) => browser_click(selector)
+);
 
-export function github_get_repo_stats(owner, repo) {
-  return get_repo_stats(owner, repo);
-}
+mcpServer.tool(
+  "browserType",
+  "Type text into an input field on the active page",
+  {
+    selector: z.string(),
+    text: z.string(),
+  },
+  async ({ selector, text }) => browser_type(selector, text)
+);
 
-export function github_get_user_profile(username) {
-  return get_user_profile(username);
-}
+mcpServer.tool(
+  "browserPressKey",
+  "Press a key (e.g., Enter, Tab, Escape) on the active page",
+  {
+    key: z.string(),
+  },
+  async ({ key }) => browser_press_key(key)
+);
+
+mcpServer.tool(
+  "browserWaitFor",
+  "Wait for a selector to appear on the active page",
+  {
+    selector: z.string(),
+    timeout: z.number().optional(),
+  },
+  async ({ selector, timeout }) => browser_wait_for(selector, timeout)
+);
+
+mcpServer.tool(
+  "calendarListEvents",
+  "List upcoming events from Google Calendar",
+  {
+    maxResults: z.number().optional().default(10),
+  },
+  async ({ maxResults }) => list_events(maxResults)
+);
+
+mcpServer.tool(
+  "calendarAddEvent",
+  "Add a new event to Google Calendar",
+  {
+    summary: z.string(),
+    description: z.string().optional(),
+    startTime: z
+      .string()
+      .describe("ISO 8601 format (e.g., 2023-12-25T10:00:00Z)"),
+    endTime: z
+      .string()
+      .describe("ISO 8601 format (e.g., 2023-12-25T11:00:00Z)"),
+    location: z.string().optional(),
+  },
+  async ({ summary, description, startTime, endTime, location }) =>
+    add_event(summary, description, startTime, endTime, location)
+);
+
+mcpServer.tool(
+  "calendarViewDay",
+  "View all events for a specific day",
+  {
+    date: z.string().describe("Date in YYYY-MM-DD format"),
+  },
+  async ({ date }) => view_day(date)
+);
+
+mcpServer.tool(
+  "keepListNotes",
+  "List notes from Google Keep",
+  {},
+  async () => keep_list_notes()
+);
+
+mcpServer.tool(
+  "keepCreateNote",
+  "Create a new note in Google Keep",
+  {
+    title: z.string().optional(),
+    text: z.string(),
+  },
+  async ({ title, text }) => keep_add_note(title, text)
+);
+
+mcpServer.tool(
+  "keepUpdateNote",
+  "Update an existing note in Google Keep",
+  {
+    id: z.string().describe("The ID of the note to update"),
+    title: z.string().optional().describe("New title for the note"),
+    text: z.string().optional().describe("New text content for the note"),
+  },
+  async ({ id, title, text }) => keep_update_note(id, title, text)
+);
+
+mcpServer.tool(
+  "keepArchiveNote",
+  "Archive or unarchive a note in Google Keep",
+  {
+    id: z.string().describe("The ID of the note to archive"),
+    archive: z.boolean().optional().default(true).describe("Whether to archive (true) or unarchive (false)"),
+  },
+  async ({ id, archive }) => keep_archive_note(id, archive)
+);
+
+mcpServer.tool(
+  "keepDeleteNote",
+  "Delete (move to trash) or restore a note in Google Keep",
+  {
+    id: z.string().describe("The ID of the note to delete"),
+    delete: z.boolean().optional().default(true).describe("Whether to delete (true) or restore (false)"),
+  },
+  async ({ id, delete: delete_note }) => keep_delete_note(id, delete_note)
+);
+
+mcpServer.tool(
+  "readProjectFile",
+  "Read the content of a file from the local filesystem",
+  {
+    filePath: z.string().describe("Absolute path to the file"),
+  },
+  async ({ filePath }) => read_file(filePath)
+);
+
+mcpServer.tool(
+  "updateCodeSnippet",
+  "Update or create a file with new content",
+  {
+    filePath: z.string().describe("Absolute path to the file"),
+    content: z.string().describe("New content for the file"),
+  },
+  async ({ filePath, content }) => update_code(filePath, content)
+);
+
+mcpServer.tool(
+  "listProjectFiles",
+  "List files and directories in a given path",
+  {
+    dirPath: z.string().describe("Absolute path to the directory"),
+  },
+  async ({ dirPath }) => list_files(dirPath)
+);
+
+mcpServer.tool(
+  "gitCheckStatus",
+  "Check the current status of the git repository",
+  {},
+  async () => check_status()
+);
+
+mcpServer.tool(
+  "githubCreateIssue",
+  "Create a new issue on a GitHub repository",
+  {
+    owner: z
+      .string()
+      .describe(
+        "The account owner of the repository. The name is not case sensitive."
+      ),
+    repo: z
+      .string()
+      .describe(
+        "The name of the repository without the .git extension. The name is not case sensitive."
+      ),
+    title: z.string().describe("The title of the issue."),
+    body: z.string().describe("The contents of the issue."),
+  },
+  async ({ owner, repo, title, body }) =>
+    create_issue(owner, repo, title, body)
+);
+
+mcpServer.tool(
+  "gitListCommits",
+  "List the latest commits in the repository",
+  {
+    count: z
+      .number()
+      .optional()
+      .default(5)
+      .describe("Number of commits to list"),
+  },
+  async ({ count }) => list_commits(count)
+);
+
+mcpServer.tool(
+  "gitCommitAll",
+  "Stage all changes and commit them with a message",
+  {
+    message: z.string().describe("The commit message"),
+  },
+  async ({ message }) => commit_all(message)
+);
+
+mcpServer.tool(
+  "gitPush",
+  "Push the committed changes to the remote repository",
+  {},
+  async () => push()
+);
+
+mcpServer.tool(
+  "githubCreatePullRequest",
+  "Create a new pull request on a GitHub repository",
+  {
+    owner: z.string(),
+    repo: z.string(),
+    title: z.string(),
+    body: z.string(),
+    head: z
+      .string()
+      .describe("The name of the branch where your changes are implemented."),
+    base: z
+      .string()
+      .optional()
+      .default("main")
+      .describe("The name of the branch you want the changes pulled into."),
+  },
+  async ({ owner, repo, title, body, head, base }) =>
+    create_pull_request(owner, repo, title, body, head, base)
+);
+
+mcpServer.tool(
+  "githubListIssues",
+  "List issues for a specific GitHub repository",
+  {
+    owner: z.string(),
+    repo: z.string(),
+    state: z.enum(["open", "closed", "all"]).optional().default("open"),
+  },
+  async ({ owner, repo, state }) => list_issues(owner, repo, state)
+);
+
+mcpServer.tool(
+  "githubListPullRequests",
+  "List pull requests for a specific GitHub repository",
+  {
+    owner: z.string(),
+    repo: z.string(),
+    state: z.enum(["open", "closed", "all"]).optional().default("open"),
+  },
+  async ({ owner, repo, state }) =>
+    list_pull_requests(owner, repo, state)
+);
+
+mcpServer.tool(
+  "githubGetRepoStats",
+  "Get statistics like stars and forks for a repository",
+  {
+    owner: z.string(),
+    repo: z.string(),
+  },
+  async ({ owner, repo }) => get_repo_stats(owner, repo)
+);
+
+mcpServer.tool(
+  "githubGetUserProfile",
+  "Get public profile information for a GitHub user",
+  {
+    username: z.string(),
+  },
+  async ({ username }) => get_user_profile(username)
+);
 
 // CONTENT SUMMARIZER TOOLS
-export function youtube_fetch_transcript(url) {
-  return fetch_transcript(url);
-}
+mcpServer.tool(
+  "youtubeGetTranscript",
+  "Fetch the transcript/captions from a YouTube video URL. Use this to get the full text content of any YouTube video for summarization or analysis.",
+  {
+    url: z.string().url().describe("The YouTube video URL (supports youtube.com/watch, youtu.be, shorts, etc.)"),
+  },
+  async ({ url }) => fetch_transcript(url)
+);
 
-export function article_summarize(url) {
-  return summarize_article(url);
-}
+mcpServer.tool(
+  "articleSummarize",
+  "Fetch and extract the main content from an article or webpage URL. Removes navigation, ads, and other clutter to get the core text.",
+  {
+    url: z.string().url().describe("The article or webpage URL to extract content from"),
+  },
+  async ({ url }) => summarize_article(url)
+);
 
-export function content_extract_key_points(input, numPoints = 5) {
-  return extract_key_points(input, numPoints);
-}
+mcpServer.tool(
+  "extractKeyPoints",
+  "Extract key takeaways and important points from text, a YouTube video, or an article URL. Returns content ready for AI summarization.",
+  {
+    input: z.string().describe("Either a URL (YouTube or article) or raw text to extract key points from"),
+    numPoints: z.number().optional().default(5).describe("Number of key points to extract (default: 5)"),
+  },
+  async ({ input, numPoints }) => extract_key_points(input, numPoints)
+);
+
+// KROKI.IO TEXT TO DIAGRAM TOOL
+mcpServer.tool(
+  "textToDiagram",
+  "Convert text descriptions to diagrams using Kroki.io. Supports multiple diagram types like Mermaid, PlantUML, GraphViz, Ditaa, Blockdiag, and more.",
+  {
+    text: z.string().describe("The diagram source text (e.g., Mermaid syntax, PlantUML code, DOT graph)"),
+    diagramType: z.string().optional().default("mermaid").describe("Type of diagram: 'mermaid', 'plantuml', 'graphviz', 'ditaa', 'blockdiag', 'seqdiag', 'actdiag', 'nwdiag', 'c4plantuml', etc."),
+    outputFormat: z.string().optional().default("png").describe("Output format: 'png', 'svg', or 'jpeg' (default: png)"),
+  },
+  async ({ text, diagramType, outputFormat }) => text_to_diagram(text, diagramType, outputFormat)
+);
+
+

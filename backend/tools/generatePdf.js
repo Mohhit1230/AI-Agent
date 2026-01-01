@@ -1,13 +1,13 @@
 import { fileURLToPath } from "url";
 import { spawn } from "child_process";
 import PDFDocument from "pdfkit";
-
+import path from "path";
 
 export function generatePdf(content) {
   return new Promise((resolve, reject) => {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
-    const scriptPath = path.join(__dirname, "Python", "pdf.py");
+    const scriptPath = path.join(__dirname,"..", "Python", "pdf.py");
 
     const pyProcess = spawn("python", [scriptPath, content]);
 

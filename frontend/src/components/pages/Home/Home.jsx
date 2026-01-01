@@ -298,61 +298,26 @@ const Home = ({ showPreloader }) => {
                             const text = m.parts?.[0]?.text;
                             if (text?.type === "resource_link") {
                               return (
-                                <div className="flex flex-col gap-4 w-full max-w-[340px] animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                <div className="flex flex-col gap-4 w-full max-w-[340px] animate-in fade-in slide-in-from-bottom-2 duration-500 mb-3">
                                   {/* Premium Structured Document Card */}
-                                  <div className="relative group/pdf overflow-hidden rounded-[2rem] bg-[#1a1c21] border border-white/5 shadow-2xl transition-all duration-500 hover:border-emerald-500/20 hover:shadow-emerald-500/5">
+                                  <div className="relative group/pdf overflow-hidden rounded-xl bg-[#1a1c21] border border-white/5 shadow-2xl transition-all duration-500 hover:border-cyan-500/20 hover:shadow-cyan-500/5">
                                     {/* Card Header: Metadata & Stats */}
                                     <div className="flex items-center justify-between px-5 py-4 border-b border-white/5 bg-white/[0.02]">
                                       <div className="flex items-center gap-3">
-                                        <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover/pdf:scale-110 transition-transform duration-500">
+                                        <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 group-hover/pdf:scale-110 transition-transform duration-500">
                                           <FileText className="h-4 w-4" />
                                         </div>
                                         <div className="flex flex-col">
-                                          <span className="text-[11px] font-black uppercase tracking-widest text-white/90 truncate max-w-[140px]">
+                                          <span className="text-[11px] font-bold uppercase tracking-widest text-white/90 truncate max-w-[140px]">
                                             {text.name || "Generated Doc"}
                                           </span>
-                                          <span className="text-[9px] font-bold text-neutral-500 uppercase tracking-tighter">
+                                          <span className="text-[9px] font-semibold text-neutral-500 uppercase tracking-wide">
                                             Portable Document Format
                                           </span>
                                         </div>
                                       </div>
-                                      <div className="px-2 py-1 rounded-md bg-white/5 border border-white/10 text-[8px] font-black text-emerald-500 uppercase">
+                                      <div className="px-2 py-1 rounded-md bg-white/5 border border-white/10 text-[10px] font-semibold text-emerald-500 uppercase">
                                         v1.0
-                                      </div>
-                                    </div>
-
-                                    {/* Card Body: The Preview Frame */}
-                                    <div className="relative h-[280px] w-full bg-[#0d0f13] overflow-hidden no-scrollbar">
-                                      <iframe
-                                        src={`${text.uri}#toolbar=0&navpanes=0&scrollbar=0`}
-                                        className="w-full h-full pointer-events-none opacity-40 group-hover/pdf:opacity-100 transition-opacity duration-700 filter grayscale group-hover/pdf:grayscale-0 no-scrollbar"
-                                        title="Document Intelligence Preview"
-                                      />
-
-                                      {/* Hover Overlay Actions */}
-                                      <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] opacity-0 group-hover/pdf:opacity-100 transition-all duration-500 flex flex-col items-center justify-center gap-4">
-                                        <div className="flex gap-2">
-                                          <a
-                                            href={`${text.uri}#toolbar=0&navpanes=0`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="p-3 bg-emerald-500 text-white rounded-2xl shadow-xl shadow-emerald-500/20 hover:scale-110 active:scale-95 transition-all"
-                                            title="Open in new tab"
-                                          >
-                                            <ExternalLink className="h-5 w-5" />
-                                          </a>
-                                          <a
-                                            href={text.uri}
-                                            download={text.name || "output.pdf"}
-                                            className="p-3 bg-white text-black rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all"
-                                            title="Download document"
-                                          >
-                                            <Zap className="h-5 w-5 fill-current" />
-                                          </a>
-                                        </div>
-                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-400 animate-pulse">
-                                          Inspect Document
-                                        </span>
                                       </div>
                                     </div>
 
@@ -369,7 +334,7 @@ const Home = ({ showPreloader }) => {
                                       <a
                                         href={text.uri}
                                         download={text.name || "output.pdf"}
-                                        className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs font-bold text-emerald-400 hover:bg-emerald-500/20 transition-all"
+                                        className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-xs font-bold text-cyan-400 hover:bg-cyan-500/20 transition-all"
                                       >
                                         <Zap className="h-3 w-3 fill-current" />{" "}
                                         Download
@@ -387,9 +352,9 @@ const Home = ({ showPreloader }) => {
                               const imgData =
                                 typeof text === "string" ? text : text.data;
                               return (
-                                <div className="flex flex-col gap-2">
+                                <div className="flex flex-col gap-2 mb-3">
                                   <div
-                                    className="cursor-pointer group relative overflow-hidden rounded-xl border border-white/10 w-fit"
+                                    className="cursor-pointer group relative overflow-hidden rounded-xl bg-[#222] w-fit"
                                     onClick={() => {
                                       setPreviewImage(imgData);
                                       setIsImageModalOpen(true);

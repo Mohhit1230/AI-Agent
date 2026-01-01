@@ -268,6 +268,6 @@ if __name__ == "__main__":
     pdf_base64 = generate_pdf(data)
     result = {
         "pdf_uri": f"data:application/pdf;base64,{pdf_base64}",
-        "name": f"agent_pdf_{int(time.time())}.pdf",
+        "name": f"{pdf_int(time.time())}.pdf",
     }
     print(json.dumps(result))

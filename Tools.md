@@ -102,5 +102,10 @@ Remembers everything you copy, makes it searchable
 
 
 36. Kroki.io text to diagram converter
-Function: text_to_diagram
-Daily Use: "Convert this text to a diagram"
+Function: textToDiagram
+Daily Use: "Convert this text to a diagram", "Create a mermaid flowchart", "Generate a PlantUML class diagram"
+Supports: Mermaid, PlantUML, GraphViz, Ditaa, BlockDiag, SeqDiag, ActDiag, NwDiag, C4PlantUML, and more
+
+37. Share Chat feature
+Function: share_chat
+Daily Use: "Share this chat with my team or selected users"
