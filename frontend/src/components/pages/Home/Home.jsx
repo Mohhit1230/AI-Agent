@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo, useCallback, memo } from "react";
-import DrawerBasic from "../Drawer/Drawer";
+import DrawerBasic from "../../Drawer/Drawer";
 import CopyButton from "./CopyButton";
 import MarkdownRenderer from "./MarkdownRenderer ";
 import NewChatScreen from "./NewChatScreen";
@@ -206,7 +206,7 @@ const Home = ({ showPreloader }) => {
                   OpenAI o3-mini
                 </span>
                 <span className="hidden sm:inline-flex bg-cyan-500/5 text-cyan-400 border-cyan-500/20 px-3 py-1.5 font-bold uppercase tracking-widest text-[9px] whitespace-nowrap items-center rounded-full border">
-                  + Gemini Fallback
+                  + Gemini 2.5 Flash
                 </span>
               </div>
 
@@ -499,7 +499,7 @@ const Home = ({ showPreloader }) => {
                     placeholder="Ask anything ..."
                     spellCheck={false}
                     autoComplete="off"
-                    className="w-full bg-[#1e2025] text-white rounded-2xl border border-white/10 px-4 py-4 pr-14 text-sm outline-none resize-none h-14 max-h-40 focus:border-cyan-500/30 transition-colors shadow-2xl placeholder:tracking-wider"
+                    className="w-full bg-[#1e2025] text-white rounded-2xl border border-white/10 px-4 py-4 pr-14 text-sm outline-none resize-none h-14 max-h-40 focus:border-white/50 transition-colors shadow-2xl placeholder:tracking-wider"
                   />
                   <div className="absolute right-3.5 bottom-5.5">
                     {loading ? (
@@ -525,7 +525,7 @@ const Home = ({ showPreloader }) => {
 
                 <button
                   onClick={scrollToBottom}
-                  className="absolute -top-0 right-16 -translate-x-1/2 flex items-center justify-center border bg-black/30 text-white p-2 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:bg-emerald-400 active:scale-95 z-[9999] cursor-pointer"
+                  className="absolute -top-0 right-16 -translate-x-1/2 flex items-center justify-center border bg-black/30 text-white p-2 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:bg-black/50 active:scale-95 z-[9999] cursor-pointer"
                 >
                   <MoveDown className="h-5 w-5 " />
                 </button>

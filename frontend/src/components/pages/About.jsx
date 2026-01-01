@@ -498,7 +498,7 @@ const About = () => {
 
             <div className="relative">
               
-              <div className="relative p-8 rounded-3xl  border border-cyan-500/50 bg-cyan-500/5 group-hover:border-cyan-500/0 group-hover:bg-emerald-950/0 transition-all duration-500 scale-110">
+              <div className="relative p-4 py-3 rounded-3xl  border border-cyan-500/50 bg-cyan-500/5 group-hover:border-cyan-500/0 group-hover:bg-emerald-950/0 transition-all duration-500 scale-110">
                 <img
                   src="/logo1.webp"
                   alt=""

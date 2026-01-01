@@ -38,6 +38,7 @@ input {
 }
 
 @keyframes bubblePulse {
+
   0%,
   100% {
     transform: scale(1);
@@ -96,6 +97,34 @@ input {
 
 .animate-slide-up {
   animation: slideUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-4px);
+  }
+
+  75% {
+    transform: translateX(4px);
+  }
 }
 
 /* Global Scrollbar Styles */

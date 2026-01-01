@@ -49,17 +49,34 @@ import {
 } from "./tools/browserTools.js";
 import multer from "multer";
 import { Buffer } from "buffer";
+import connectDB from "./config/db.js";
+import authRoutes from "./routes/auth.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
 
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL, // Adjust this to your frontend URL in production
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
   })
 );
+app.use(cookieParser());
 app.use((req, res, next) => {
   if (req.path === "/messages") {
     return next();
@@ -994,23 +1011,39 @@ app.post("/chat", async (req, res) => {
   }
 });
 
+/* ---------------------------- AUTH ROUTES ---------------------------- */
+
+app.use("/api/auth", authRoutes);
+
 /* ---------------------------- START SERVER ---------------------------- */
 
-app.listen(4000, async () => {
-  console.log("🚀 Unified backend running at http://localhost:4000");
+const PORT = process.env.PORT || 4000;
 
-  // Log which AI providers are available
-  console.log("\n📡 AI Provider Status:");
-  console.log(`   OpenAI:  ${openaiClient ? "✅ Configured" : "❌ Not configured (set OPENAI_API_KEY)"}`);
-  console.log(`   Gemini:  ${process.env.GEMINI_API_KEY ? "✅ Configured" : "❌ Not configured (set GEMINI_API_KEY)"}`);
-  console.log(`   Priority: OpenAI → Gemini\n`);
-
+const startServer = async () => {
   try {
-    await mcpClient.connect(
-      new SSEClientTransport(new URL("http://localhost:4000/sse"))
-    );
-    console.log("✅ AI proxy connected to MCP server");
-  } catch (err) {
-    console.error("❌ MCP client connection failed:", err);
+    // Connect to MongoDB
+    if (process.env.MONGODB_URI) {
+      await connectDB();
+    } else {
+      console.log("⚠️ MongoDB not configured (set MONGODB_URI)");
+    }
+
+    app.listen(PORT, async () => {
+      console.log(`🚀 Unified backend running at http://localhost:${PORT}`);
+
+      try {
+        await mcpClient.connect(
+          new SSEClientTransport(new URL(`http://localhost:${PORT}/sse`))
+        );
+        console.log("✅ AI proxy connected to MCP server");
+      } catch (err) {
+        console.error("❌ MCP client connection failed:", err);
+      }
+    });
+  } catch (error) {
+    console.error("❌ Failed to start server:", error);
+    process.exit(1);
   }
-});
+};
+
+startServer();

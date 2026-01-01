@@ -22,11 +22,11 @@ const CopyButton = ({ text, pdf }) => {
   return (
     <button
       onClick={handleCopy}
-      className="p-1.5 rounded-lg bg-[#1a1d21] border border-white/10 text-neutral-400 hover:text-emerald-400 hover:bg-neutral-800 transition-all duration-200"
+      className="p-1.5 rounded-lg  border border-white/10 text-neutral-400 hover:text-cyan-400 bg-white/5 transition-all duration-200"
       title={copied ? "Copied!" : "Copy message"}
     >
       {copied ? (
-        <CheckIcon className="h-3.5 w-3.5 text-emerald-400" />
+        <CheckIcon className="h-3.5 w-3.5 text-cyan-400" />
       ) : (
         <svg
           width="14px"
