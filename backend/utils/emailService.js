@@ -5,18 +5,18 @@ dotenv.config();
 
 // Create reusable transporter
 const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.HOST_EMAIL,
-        pass: process.env.HOST_PASSWORD,
-    },
+  service: "gmail",
+  auth: {
+    user: process.env.HOST_EMAIL,
+    pass: process.env.HOST_PASSWORD,
+  },
 });
 
 // Email templates
 const emailTemplates = {
-    otp: (name, otp) => ({
-        subject: "🔐 Your Verification Code - Prosperity Agent",
-        html: `
+  otp: (name, otp) => ({
+    subject: "🔐 Your Verification Code - Prosperity Agent",
+    html: `
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,9 +30,9 @@ const emailTemplates = {
         <table width="100%" style="max-width: 520px; background: linear-gradient(145deg, rgba(30, 33, 40, 0.95), rgba(20, 22, 28, 0.98)); border-radius: 24px; overflow: hidden; box-shadow: 0 25px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);">
           <!-- Header -->
           <tr>
-            <td style="padding: 48px 40px 32px; text-align: center; background: linear-gradient(180deg, rgba(147, 112, 219, 0.15) 0%, transparent 100%);">
-              <div style="width: 80px; height: 80px; margin: 0 auto 24px; background: linear-gradient(135deg, #9370DB 0%, #8A2BE2 50%, #7B68EE 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(147, 112, 219, 0.4);">
-                <span style="font-size: 36px;">🔐</span>
+            <td style="padding: 48px 40px 32px; text-align: center; background: linear-gradient(180deg, rgba(6, 182, 212, 0.15) 0%, transparent 100%);">
+              <div style="width: 80px; height: 80px; margin: 0 auto 24px; background: linear-gradient(135deg, #06B6D4 0%, #0891B2 50%, #0E7490 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(6, 182, 212, 0.4);">
+               <img src="https://ai-agent-mocha-pi.vercel.app/favicon1.png" style="width: 40px; height: 40px;" />
               </div>
               <h1 style="margin: 0 0 8px; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">Verification Code</h1>
               <p style="margin: 0; color: rgba(255,255,255,0.5); font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Prosperity Agent</p>
@@ -43,16 +43,16 @@ const emailTemplates = {
           <tr>
             <td style="padding: 32px 40px 40px;">
               <p style="margin: 0 0 24px; color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.6;">
-                Hey <strong style="color: #9370DB;">${name}</strong>! 👋
+                Hey <strong style="color: #06B6D4;">${name}</strong>! 👋
               </p>
               <p style="margin: 0 0 32px; color: rgba(255,255,255,0.7); font-size: 15px; line-height: 1.6;">
                 Use this code to verify your account. It'll expire in <strong style="color: #fff;">10 minutes</strong>.
               </p>
               
               <!-- OTP Box -->
-              <div style="background: linear-gradient(135deg, rgba(147, 112, 219, 0.2), rgba(138, 43, 226, 0.15)); border: 1px solid rgba(147, 112, 219, 0.3); border-radius: 16px; padding: 28px; text-align: center; margin-bottom: 32px;">
+              <div style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(8, 145, 178, 0.15)); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: 16px; padding: 28px; text-align: center; margin-bottom: 32px;">
                 <p style="margin: 0 0 12px; color: rgba(255,255,255,0.5); font-size: 12px; text-transform: uppercase; letter-spacing: 2px;">Your OTP Code</p>
-                <div style="font-size: 36px; font-weight: 800; letter-spacing: 12px; color: #9370DB; font-family: 'Courier New', monospace; text-shadow: 0 0 30px rgba(147, 112, 219, 0.5);">
+                <div style="font-size: 36px; font-weight: 800; letter-spacing: 12px; color: #06B6D4; font-family: 'Courier New', monospace; text-shadow: 0 0 30px rgba(6, 182, 212, 0.5);">
                   ${otp}
                 </div>
               </div>
@@ -85,11 +85,11 @@ const emailTemplates = {
 </body>
 </html>
     `,
-    }),
+  }),
 
-    resetPassword: (name, otp) => ({
-        subject: "🔑 Reset Your Password - Prosperity Agent",
-        html: `
+  resetPassword: (name, otp) => ({
+    subject: "🔑 Reset Your Password - Prosperity Agent",
+    html: `
 <!DOCTYPE html>
 <html>
 <head>
@@ -103,9 +103,9 @@ const emailTemplates = {
         <table width="100%" style="max-width: 520px; background: linear-gradient(145deg, rgba(30, 33, 40, 0.95), rgba(20, 22, 28, 0.98)); border-radius: 24px; overflow: hidden; box-shadow: 0 25px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);">
           <!-- Header -->
           <tr>
-            <td style="padding: 48px 40px 32px; text-align: center; background: linear-gradient(180deg, rgba(59, 130, 246, 0.15) 0%, transparent 100%);">
-              <div style="width: 80px; height: 80px; margin: 0 auto 24px; background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 50%, #2563EB 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(59, 130, 246, 0.4);">
-                <span style="font-size: 36px;">🔑</span>
+            <td style="padding: 48px 40px 32px; text-align: center; background: linear-gradient(180deg, rgba(6, 182, 212, 0.15) 0%, transparent 100%);">
+              <div style="width: 80px; height: 80px; margin: 0 auto 24px; background: linear-gradient(135deg, #06B6D4 0%, #0891B2 50%, #0E7490 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(6, 182, 212, 0.4);">
+                <img src="https://ai-agent-mocha-pi.vercel.app/favicon1.png" style="width: 40px; height: 40px;" />
               </div>
               <h1 style="margin: 0 0 8px; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">Password Reset</h1>
               <p style="margin: 0; color: rgba(255,255,255,0.5); font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Prosperity Agent</p>
@@ -116,16 +116,16 @@ const emailTemplates = {
           <tr>
             <td style="padding: 32px 40px 40px;">
               <p style="margin: 0 0 24px; color: rgba(255,255,255,0.8); font-size: 16px; line-height: 1.6;">
-                Hey <strong style="color: #3B82F6;">${name}</strong>! 👋
+                Hey <strong style="color: #06B6D4;">${name}</strong>! 👋
               </p>
               <p style="margin: 0 0 32px; color: rgba(255,255,255,0.7); font-size: 15px; line-height: 1.6;">
                 We received a request to reset your password. Use this code within <strong style="color: #fff;">10 minutes</strong>.
               </p>
               
               <!-- OTP Box -->
-              <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(29, 78, 216, 0.15)); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 16px; padding: 28px; text-align: center; margin-bottom: 32px;">
+              <div style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(8, 145, 178, 0.15)); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: 16px; padding: 28px; text-align: center; margin-bottom: 32px;">
                 <p style="margin: 0 0 12px; color: rgba(255,255,255,0.5); font-size: 12px; text-transform: uppercase; letter-spacing: 2px;">Reset Code</p>
-                <div style="font-size: 36px; font-weight: 800; letter-spacing: 12px; color: #3B82F6; font-family: 'Courier New', monospace; text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);">
+                <div style="font-size: 36px; font-weight: 800; letter-spacing: 12px; color: #06B6D4; font-family: 'Courier New', monospace; text-shadow: 0 0 30px rgba(6, 182, 212, 0.5);">
                   ${otp}
                 </div>
               </div>
@@ -158,11 +158,11 @@ const emailTemplates = {
 </body>
 </html>
     `,
-    }),
+  }),
 
-    welcome: (name) => ({
-        subject: "🎉 Welcome to Prosperity Agent!",
-        html: `
+  welcome: (name) => ({
+    subject: "🎉 Welcome to Prosperity Agent!",
+    html: `
 <!DOCTYPE html>
 <html>
 <head>
@@ -178,9 +178,9 @@ const emailTemplates = {
           <tr>
             <td style="padding: 48px 40px 32px; text-align: center; background: linear-gradient(180deg, rgba(16, 185, 129, 0.15) 0%, transparent 100%);">
               <div style="width: 80px; height: 80px; margin: 0 auto 24px; background: linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(16, 185, 129, 0.4);">
-                <span style="font-size: 36px;">🚀</span>
+                <img src="https://ai-agent-mocha-pi.vercel.app/favicon1.png" style="width: 40px; height: 40px;" />
               </div>
-              <h1 style="margin: 0 0 8px; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">Welcome Aboard!</h1>
+              <h1 style="margin: 0 0 8px; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px; ">Welcome Aboard!</h1>
               <p style="margin: 0; color: rgba(255,255,255,0.5); font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Prosperity Agent</p>
             </td>
           </tr>
@@ -238,37 +238,37 @@ const emailTemplates = {
 </body>
 </html>
     `,
-    }),
+  }),
 };
 
 // Send email utility
 export const sendEmail = async (to, template, data) => {
-    try {
-        const { subject, html } = emailTemplates[template](...data);
+  try {
+    const { subject, html } = emailTemplates[template](...data);
 
-        const mailOptions = {
-            from: `"Prosperity Agent" <${process.env.HOST_EMAIL}>`,
-            to,
-            subject,
-            html,
-        };
+    const mailOptions = {
+      from: `"Prosperity Agent" <${process.env.HOST_EMAIL}>`,
+      to,
+      subject,
+      html,
+    };
 
-        const info = await transporter.sendMail(mailOptions);
-        console.log(`📧 Email sent: ${to}`);
-        return { success: true, messageId: info.messageId };
-    } catch (error) {
-        console.error("❌ Email sending failed:", error);
-        throw new Error("Failed to send email");
-    }
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`📧 Email sent: ${to}`);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error("❌ Email sending failed:", error);
+    throw new Error("Failed to send email");
+  }
 };
 
 // Verify transporter on startup
 transporter.verify((error, success) => {
-    if (error) {
-        console.error("❌ Email transporter error:", error);
-    } else {
-        console.log("📧 Email service ready");
-    }
+  if (error) {
+    console.error("❌ Email transporter error:", error);
+  } else {
+    console.log("📧 Email service ready");
+  }
 });
 
 export default transporter;

@@ -65,15 +65,10 @@ const Signup = () => {
             {/* Card */}
             <div className="w-full max-w-[440px] bg-[#1a1c21]/80 backdrop-blur-xl border border-white/5 rounded-3xl shadow-2xl relative z-10 animate-[fadeInUp_0.6s_ease-out] overflow-hidden">
                 {/* Glow Header */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-emerald-500 opacity-50" />
+                <div className="absolute top-0 left-0 right-0 h-1 bg-cyan-500 opacity-50" />
 
-                <div className="px-10 pt-12 pb-6 text-center">
-                    <div className="w-16 h-16 mx-auto mb-6 relative group">
-                        <div className="absolute inset-0 bg-cyan-500/20 blur-xl rounded-2xl group-hover:bg-emerald-500/30 transition-all duration-500" />
-                        <div className="relative w-full h-full bg-gradient-to-br from-cyan-400 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg transition-transform duration-500">
-                            <Sparkles size={30} className="text-[#0d0f13]" />
-                        </div>
-                    </div>
+                <div className="px-10 pt-8 pb-3 text-center">
+                    <img src="/favicon1.png" alt="" className="w-12 h-12 mx-auto mb-5" />
                     <h1 className="text-3xl font-bold text-white mb-2">
                         Create Account
                     </h1>
@@ -128,7 +123,7 @@ const Signup = () => {
                                     className={`w-full py-3.5 px-4 pl-12 bg-white/[0.03] border rounded-xl text-white text-sm outline-none transition-all duration-300 placeholder:text-white/20
                     ${errors.email
                                             ? "border-red-500/50 bg-red-500/5"
-                                            : "border-white/10 group-hover:border-cyan-500/30 focus:border-cyan-500/50"
+                                            : "border-white/10 group-hover:border-emerald-500/30 focus:border-emerald-500/50"
                                         }`}
                                     placeholder="name@example.com"
                                     {...register("email", {
@@ -136,7 +131,7 @@ const Signup = () => {
                                         pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, message: "Invalid email" },
                                     })}
                                 />
-                                <Mail className={`absolute left-4 top-1/2 -translate-y-1/2 w-[18px] transition-colors duration-300 ${errors.email ? "text-red-400" : "text-neutral-500 group-hover:text-cyan-400"}`} />
+                                <Mail className={`absolute left-4 top-1/2 -translate-y-1/2 w-[18px] transition-colors duration-300 ${errors.email ? "text-red-400" : "text-neutral-500 group-hover:text-emerald-400"}`} />
                             </div>
                             {errors.email && (
                                 <span className="text-red-400 text-xs ml-1 mt-1 font-medium">{errors.email.message}</span>
@@ -186,7 +181,7 @@ const Signup = () => {
                         {/* Submit Button */}
                         <button
                             type="submit"
-                            className="mt-4 py-4 px-6 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-xl text-[#0d0f13] font-bold transition-all duration-300 hover:scale-[1.01] active:scale-95 shadow-lg shadow-cyan-500/10 hover:shadow-emerald-500/20"
+                            className="mt-4 py-4 px-6 bg-cyan-500/60 rounded-xl text-white font-bold transition-all duration-300 hover:scale-[1.01] active:scale-95 shadow-lg shadow-cyan-500/10 hover:shadow-emerald-500/20"
                             disabled={signupLoading}
                         >
                             {signupLoading ? (

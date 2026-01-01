@@ -12,7 +12,7 @@ This isn't just a chatbot — it's a complete AI workspace that integrates brows
 
 ## 🚀 Key Features
 
-### 🧠 Multi-Provider AI System (NEW!)
+### 🧠 Multi-Provider AI System
 Intelligent fallback system ensures 99.9% uptime:
 - **Primary:** OpenAI o3-mini - Advanced reasoning and complex task execution
 - **Fallback:** Google Gemini 2.5 Flash - Seamless backup when needed
@@ -24,6 +24,8 @@ The agent can interact with the live web using Playwright:
 - **Web Navigation:** Navigate to any URL and extract page content
 - **Screenshots:** Capture full-page screenshots of websites
 - **Interactive Actions:** Click, type, press keys, and automate complex workflows
+
+![Browser Automation](docs/images/browser_automation.png)
 
 ### 🚀 GitHub & Git Assistant
 Seamlessly manage your codebase and remote repositories directly from the chat:
@@ -42,16 +44,23 @@ Full integration with Google productivity tools:
 - **Smart Previews:** View generated PDFs directly within the chat interface using the built-in PDF viewer
 - **Resource Linking:** Download links are provided for every generated file
 
+<p align="center">
+  <img src="docs/images/pdf_gen.png" width="45%" />
+  <img src="docs/images/pdf_preview.png" width="45%" />
+</p>
+
 ### 📧 Communication & Socials
 - **Direct Emailing:** Send emails via Gmail integration with custom subjects and bodies
 - **Twitter (X) Integration:** Post updates directly to your X account through the AI
+
+![Email System](docs/images/email_system.png)
 
 ### 💻 Local File System Operations
 - **Project Analysis:** Read and analyze any folder or file on your system
 - **Code Refactoring:** Apply suggested improvements directly to your code files
 - **File Management:** List directories, read contents, and update files
 
-### 📺 YouTube & Article Summarizer (NEW!)
+### 📺 YouTube & Article Summarizer
 Save hours of reading and watching with intelligent summarization:
 - **YouTube Transcripts:** Fetch full video transcripts automatically
 - **Article Extraction:** Extract main content from any webpage, removing clutter

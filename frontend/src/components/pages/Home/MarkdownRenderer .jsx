@@ -73,17 +73,16 @@ const MarkdownRenderer = ({ content }) => {
             return (
               <div className="mb-5 mt-5 bg-[#0d1117] rounded-lg overflow-hidden border border-zinc-700 self-center mx-auto">
                 {/* 🏷️ Language Label */}
-                <div className="relative px-4 py-1 text-xs font-mono bg-white/5 text-zinc-400 border-b border-zinc-700 tracking-wider">
+                <div className="relative px-4 py-1 text-xs flex items-center justify-between bg-white/5 text-zinc-400 border-b border-zinc-700 tracking-wider">
                   <span>{language}</span>
                   <CopyButton
-                    text={`\`\`\`${content.split("```")[1]}\`\`\``}
-                    user=""
-                    model="assistant"
+                    text={content.replace(/ {2,}/g, "").trim().split("```")[1].split(`${language}`)[1] || content.replace(/ {2,}/g, "").trim().split("```")[3].split(`${language}`)[1]}
+                    
                   />
                 </div>
 
                 {/* 💻 Actual Code Block */}
-                <pre className="overflow-x-hidden ">{children}</pre>
+                <pre className="overflow-x-hidden">{children}</pre>
               </div>
             );
           },

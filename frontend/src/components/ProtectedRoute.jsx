@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children, redirectTo = "/login" }) => {
     if (loading) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-[#0f1115] gap-4">
-                <div className="w-10 h-10 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin" />
+                <div className="w-10 h-10 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin" />
                 <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.3em] animate-pulse">Authenticating</p>
             </div>
         );
@@ -43,7 +43,7 @@ export const GuestRoute = ({ children, redirectTo = "/" }) => {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[#0f1115]">
-                <div className="w-10 h-10 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin" />
+                <div className="w-10 h-10 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin" />
             </div>
         );
     }

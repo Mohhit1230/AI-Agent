@@ -86,7 +86,7 @@ const VerifyOTP = () => {
             </div>
 
             <div className="w-full max-w-[460px] bg-[#1a1c21]/80 backdrop-blur-xl border border-white/5 rounded-3xl shadow-2xl relative z-10 animate-[fadeInUp_0.6s_ease-out] overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-cyan-500 opacity-50" />
+                <div className="absolute top-0 left-0 right-0 h-1 bg-cyan-500 opacity-50" />
 
                 <div className="px-10 pt-12 pb-4 text-center">
                     <button onClick={() => navigate(-1)} className="absolute top-8 left-8 p-2 rounded-xl bg-white/5 border border-white/5 text-neutral-400 hover:text-emerald-400 transition-all">
@@ -94,7 +94,7 @@ const VerifyOTP = () => {
                     </button>
                     <div className="w-16 h-16 mx-auto mb-6 relative group">
                         <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-2xl group-hover:bg-cyan-500/30 transition-all duration-500" />
-                        <div className="relative w-full h-full bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg transition-transform duration-500">
+                        <div className="relative w-full h-full bg-cyan-500 rounded-2xl flex items-center justify-center shadow-lg transition-transform duration-500">
                             <ShieldCheck size={30} className="text-[#0d0f13]" />
                         </div>
                     </div>
@@ -131,9 +131,13 @@ const VerifyOTP = () => {
                             <button
                                 onClick={handleVerify}
                                 disabled={otp.some(d => !d) || verifyLoading}
-                                className="w-full py-4 px-6 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-xl text-[#0d0f13] font-bold transition-all duration-300 hover:scale-[1.01] active:scale-95 disabled:opacity-30 shadow-lg shadow-emerald-500/10"
+                                className="w-full py-4 px-6 bg-cyan-500/60 rounded-xl text-white font-bold transition-all duration-300 hover:scale-[1.02] active:scale-95 disabled:opacity-30"
                             >
-                                {verifyLoading ? "Verifying..." : "Verify Identity"}
+                                {verifyLoading ? (
+                                    <div className="w-5 h-5 border-2 border-[#0d0f13]/30 border-t-[#0d0f13] rounded-full animate-spin" />
+                                ) : (
+                                    "Verify Identity"
+                                )}
                             </button>
                             <div className="text-center">
                                 {canResend ? (

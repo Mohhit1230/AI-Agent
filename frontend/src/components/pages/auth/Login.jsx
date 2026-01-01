@@ -45,15 +45,13 @@ const Login = () => {
             {/* Card */}
             <div className="w-full max-w-[420px] bg-[#1a1c21]/80 backdrop-blur-xl border border-white/5 rounded-3xl shadow-2xl relative z-10 animate-[fadeInUp_0.6s_ease-out] overflow-hidden">
                 {/* Glow Header */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-cyan-500 opacity-50" />
+                <div className="absolute top-0 left-0 right-0 h-1 bg-cyan-400 opacity-50" />
 
-                <div className="px-10 pt-12 pb-6 text-center">
-                    <div className="w-16 h-16 mx-auto mb-6 relative group">
-                        <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-2xl group-hover:bg-cyan-500/30 transition-all duration-500" />
-                        <div className="relative w-full h-full bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg transition-transform duration-500">
-                            <Sparkles size={30} className="text-[#0d0f13]" />
-                        </div>
-                    </div>
+                <div className="px-10 pt-8 pb-6 text-center">
+                   
+                       
+                        <img src="/favicon1.png" alt="" className="w-12 h-12 mx-auto mb-5" />
+                    
                     <h1 className="text-3xl font-bold text-white mb-2">
                         Welcome Back
                     </h1>
@@ -121,14 +119,14 @@ const Login = () => {
                                     className={`w-full py-3.5 px-4 pl-12 pr-12 bg-white/[0.03] border rounded-xl text-white text-sm outline-none transition-all duration-300 placeholder:text-white/20
                     ${errors.password
                                             ? "border-red-500/50 bg-red-500/5"
-                                            : "border-white/10 group-hover:border-cyan-500/30 focus:border-cyan-500/50"
+                                            : "border-white/10 group-hover:border-emerald-500/30 focus:border-emerald-500/50"
                                         }`}
                                     placeholder="••••••••"
                                     {...register("password", {
                                         required: "Password is required",
                                     })}
                                 />
-                                <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 w-[18px] transition-colors duration-300 ${errors.password ? "text-red-400" : "text-neutral-500 group-hover:text-cyan-400"}`} />
+                                <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 w-[18px] transition-colors duration-300 ${errors.password ? "text-red-400" : "text-neutral-500 group-hover:text-emerald-400"}`} />
                                 <button
                                     type="button"
                                     className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white transition-colors"
@@ -147,7 +145,7 @@ const Login = () => {
                         {/* Submit Button */}
                         <button
                             type="submit"
-                            className="mt-2 py-4 px-6 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-xl text-[#0d0f13] font-bold transition-all duration-300 hover:scale-[1.01] active:scale-95 shadow-lg shadow-emerald-500/10 hover:shadow-cyan-500/20"
+                            className="mt-2 py-4 px-6 bg-cyan-400/60 rounded-xl text-white font-bold transition-all duration-300 hover:scale-[1.02] active:scale-95"
                             disabled={loginLoading}
                         >
                             {loginLoading ? (
@@ -164,7 +162,7 @@ const Login = () => {
                     <div className="mt-10 text-center">
                         <p className="text-neutral-400 text-sm">
                             Don't have an account?{" "}
-                            <Link to="/signup" className="text-emerald-400 font-semibold hover:underline">
+                            <Link to="/signup" className="text-cyan-400 font-semibold hover:underline">
                                 Sign up
                             </Link>
                         </p>
