@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
 const api = axios.create({
     baseURL: `${API_URL}/api/auth`,
-    withCredentials: true, 
+    withCredentials: true,
 });
 
 // Response interceptor to handle token refresh
@@ -140,6 +140,19 @@ export const resetPassword = createAsyncThunk(
             return data;
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Password reset failed" });
+        }
+    }
+);
+
+// Google Login
+export const googleLogin = createAsyncThunk(
+    "auth/googleLogin",
+    async ({ credential }, { rejectWithValue }) => {
+        try {
+            const { data } = await api.post("/google", { credential });
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || { message: "Google login failed" });
         }
     }
 );
@@ -313,6 +326,23 @@ const authSlice = createSlice({
             .addCase(login.rejected, (state, action) => {
                 state.loginLoading = false;
                 state.error = action.payload?.message || "Login failed";
+            })
+
+            // ========== GOOGLE LOGIN ==========
+            .addCase(googleLogin.pending, (state) => {
+                state.loginLoading = true;
+                state.error = null;
+            })
+            .addCase(googleLogin.fulfilled, (state, action) => {
+                state.loginLoading = false;
+                state.isAuthenticated = true;
+                state.user = action.payload.user;
+                localStorage.removeItem("pendingVerification");
+                state.error = null;
+            })
+            .addCase(googleLogin.rejected, (state, action) => {
+                state.loginLoading = false;
+                state.error = action.payload?.message || "Google login failed";
             })
 
             // ========== FORGOT PASSWORD ==========

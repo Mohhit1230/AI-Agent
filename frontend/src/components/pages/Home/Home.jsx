@@ -170,7 +170,7 @@ const Home = ({ showPreloader }) => {
     <>
       <div
         className={`flex  min-h-screen ${showPreloader ? "h-screen overflow-hidden" : ""
-          }`}
+          } selection:bg-cyan-500/40 selection:text-white`}
       >
         <div className="fixed inset-0 pointer-events-none">
           <div className="absolute top-[-20%] left-[-4%] w-[40%] h-[40%] bg-emerald-500/10 blur-[60px] rounded-full" />

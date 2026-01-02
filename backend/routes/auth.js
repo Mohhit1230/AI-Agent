@@ -9,8 +9,12 @@ import {
     authRateLimit,
 } from "../middleware/auth.js";
 import jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
 
 const router = express.Router();
+
+// Initialize Google OAuth client
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Cookie options
 const cookieOptions = {
@@ -638,5 +642,139 @@ router.get("/check", async (req, res) => {
         });
     }
 });
+
+// ==================== GOOGLE AUTH ====================
+router.post(
+    "/google",
+    authRateLimit(10, 15 * 60 * 1000), // 10 attempts per 15 minutes
+    [
+        body("credential").optional(),
+        body("userInfo").optional().isObject()
+    ],
+    validate,
+    async (req, res) => {
+        try {
+            const { credential, userInfo } = req.body;
+
+            if (!credential && !userInfo) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Google authentication data is required.",
+                });
+            }
+
+            let googleData;
+
+            // If userInfo is provided (from useGoogleLogin), use it directly
+            if (userInfo && userInfo.email) {
+                googleData = {
+                    sub: userInfo.sub,
+                    email: userInfo.email,
+                    name: userInfo.name,
+                    picture: userInfo.picture
+                };
+            } else if (credential) {
+                // Fetch user info from Google using the access token
+                
+                try {
+                    const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                        headers: {
+                            'Authorization': `Bearer ${credential}`
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Google API error: ${response.status}`);
+                    }
+
+                    const userData = await response.json();
+
+                    googleData = {
+                        sub: userData.sub,
+                        email: userData.email,
+                        name: userData.name,
+                        picture: userData.picture
+                    };
+                } catch (fetchError) {
+                    console.error("❌ Failed to fetch user info:", fetchError.message);
+                    return res.status(401).json({
+                        success: false,
+                        message: "Failed to verify Google credentials. Please try again.",
+                    });
+                }
+            } else {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid Google authentication data.",
+                });
+            }
+
+            const { sub: googleId, email, name, picture } = googleData;
+
+            // Check if user exists
+            let user = await User.findOne({ email }).select("+refreshToken");
+
+            if (user) {
+                // Update existing user
+                if (!user.googleId) {
+                    user.googleId = googleId;
+                }
+                if (!user.isVerified) {
+                    user.isVerified = true;
+                }
+                if (!user.avatar && picture) {
+                    user.avatar = picture;
+                }
+                user.lastLogin = new Date();
+            } else {
+                // Create new user
+                user = new User({
+                    name,
+                    email,
+                    googleId,
+                    provider: "google",
+                    avatar: picture,
+                    isVerified: true,
+                });
+
+                // Send welcome email
+                try {
+                    await sendEmail(email, "welcome", [name]);
+                } catch (emailError) {
+                    console.error("Welcome email error:", emailError);
+                    // Continue even if email fails
+                }
+            }
+
+            // Generate tokens
+            const accessToken = generateAccessToken(user);
+            const refreshToken = generateRefreshToken(user);
+            user.refreshToken = refreshToken;
+            await user.save();
+
+            // Set cookies
+            setAuthCookies(res, accessToken, refreshToken);
+
+            res.status(200).json({
+                success: true,
+                message: user.createdAt === user.updatedAt
+                    ? "Account created successfully! Welcome aboard! 🎉"
+                    : "Login successful! 🎉",
+                user: {
+                    id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    avatar: user.avatar,
+                },
+            });
+        } catch (error) {
+            console.error("Google auth error:", error);
+            res.status(500).json({
+                success: false,
+                message: "Google authentication failed. Please try again.",
+            });
+        }
+    }
+);
 
 export default router;
