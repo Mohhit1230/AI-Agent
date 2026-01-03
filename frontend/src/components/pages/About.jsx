@@ -23,7 +23,6 @@ import {
   MousePointer2,
   StickyNote,
   Calendar,
-  FolderOpen,
   Sparkles,
   Bot,
   Github,
@@ -34,6 +33,9 @@ import {
   Youtube,
   BookOpen,
   ListChecks,
+  Linkedin,
+  TrendingUp,
+  Hash,
 } from "lucide-react";
 
 const featuresData = [
@@ -74,9 +76,9 @@ const featuresData = [
         icon: Calendar,
       },
       {
-        title: "File Operations",
-        desc: "Read, write, and refactor local files.",
-        icon: FolderOpen,
+        title: "LinkedIn Posts",
+        desc: "Draft, optimize & publish LinkedIn content.",
+        icon: Linkedin,
       },
     ],
     color: "blue",
@@ -146,6 +148,28 @@ const featuresData = [
       },
     ],
     color: "cyan",
+  },
+  {
+    category: "LinkedIn Tools",
+    icon: Linkedin,
+    items: [
+      {
+        title: "Direct Publishing",
+        desc: "Post to LinkedIn with one command.",
+        icon: Linkedin,
+      },
+      {
+        title: "Engagement Score",
+        desc: "Analyze post potential before posting.",
+        icon: TrendingUp,
+      },
+      {
+        title: "Smart Hashtags",
+        desc: "Industry-specific hashtag suggestions.",
+        icon: Hash,
+      },
+    ],
+    color: "purple",
   },
 ];
 
@@ -390,11 +414,11 @@ const About = () => {
               Core Ecosystem
             </h2>
             <p className="text-slate-500 font-medium">
-              36+ tools built to handle complex automation without missing a beat.
+              40+ tools built to handle complex automation without missing a beat.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
             {featuresData.map((cat, i) => (
               <div key={i} className="flex flex-col gap-5">
                 <div className="flex items-center gap-3">
@@ -407,7 +431,9 @@ const About = () => {
                           ? "bg-orange-500/10 text-orange-400"
                           : cat.color === "red"
                             ? "bg-red-500/10 text-red-400"
-                            : "bg-cyan-500/10 text-cyan-400"
+                            : cat.color === "purple"
+                              ? "bg-purple-500/10 text-purple-400"
+                              : "bg-cyan-500/10 text-cyan-400"
                       }`}
                   >
                     <cat.icon className="h-5 w-5 animate-pulse" />
@@ -435,7 +461,9 @@ const About = () => {
                                 ? "text-orange-500/50 group-hover:text-orange-400"
                                 : cat.color === "red"
                                   ? "text-red-500/50 group-hover:text-red-400"
-                                  : "text-cyan-500/50 group-hover:text-cyan-400"
+                                  : cat.color === "purple"
+                                    ? "text-purple-500/50 group-hover:text-purple-400"
+                                    : "text-cyan-500/50 group-hover:text-cyan-400"
                             }`}
                         >
                           <item.icon className="h-4 w-4 group-hover:scale-110 transition-all mb-2" />

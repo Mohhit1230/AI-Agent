@@ -52,13 +52,9 @@ Full integration with Google productivity tools:
 ### 📧 Communication & Socials
 - **Direct Emailing:** Send emails via Gmail integration with custom subjects and bodies
 - **Twitter (X) Integration:** Post updates directly to your X account through the AI
+- **LinkedIn Post Generator:** Draft, optimize, and publish LinkedIn posts directly with engagement scoring
 
 ![Email System](docs/images/email_system.png)
-
-### 💻 Local File System Operations
-- **Project Analysis:** Read and analyze any folder or file on your system
-- **Code Refactoring:** Apply suggested improvements directly to your code files
-- **File Management:** List directories, read contents, and update files
 
 ### 📺 YouTube & Article Summarizer
 Save hours of reading and watching with intelligent summarization:
@@ -125,6 +121,9 @@ cd AI-Agent
    HOST_EMAIL=your_gmail@gmail.com
    HOST_PASSWORD=your_app_password
    
+   # LinkedIn API (one-time OAuth setup)
+   LINKEDIN_ACCESS_TOKEN=your_access_token
+   
    # Server Config
    FRONTEND_URL=http://localhost:5173
    ```
@@ -180,7 +179,7 @@ AI-Agent/
 
 ---
 
-## 🔧 Available Tools (36+)
+## 🔧 Available Tools (40+)
 
 | Category | Tools |
 |----------|-------|
@@ -188,9 +187,9 @@ AI-Agent/
 | **Git & GitHub** | `gitCheckStatus`, `gitListCommits`, `gitCommitAll`, `gitPush`, `githubCreateIssue`, `githubListIssues`, `githubListPullRequests`, `githubCreatePullRequest`, `githubGetRepoStats`, `githubGetUserProfile` |
 | **Google Calendar** | `calendarListEvents`, `calendarAddEvent`, `calendarViewDay` |
 | **Google Keep** | `keepListNotes`, `keepCreateNote`, `keepUpdateNote`, `keepArchiveNote`, `keepDeleteNote` |
-| **File System** | `listProjectFiles`, `readProjectFile`, `updateCodeSnippet` |
+| **LinkedIn** | `linkedinPublishPost`, `linkedinDraftPost`, `linkedinSuggestHashtags`, `linkedinAnalyzeEngagement`, `linkedinGetProfile` |
 | **Communication** | `sendEmail`, `createPost` (Twitter/X) |
-| **Documents** | `givemePDF`, `editPDF` |
+| **Documents** | `givemePDF`, `editPDF`, `textToDiagram` |
 | **Content Summarizer** | `youtubeGetTranscript`, `articleSummarize`, `extractKeyPoints` |
 
 ---

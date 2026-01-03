@@ -3,10 +3,18 @@ import { email } from "./tools/email.js";
 import { editPDF, generatePdf } from "./tools/generatePdf.js";
 import { keep_add_note, keep_archive_note, keep_delete_note, keep_list_notes, keep_update_note } from "./tools/google/keep_api.js";
 import { add_event, list_events, view_day } from "./tools/google/calender_api.js";
-import { list_files, read_file, update_code } from "./tools/localFileSys.js";
 import { check_status, commit_all, create_issue, create_pull_request, get_repo_stats, get_user_profile, list_commits, list_issues, list_pull_requests, push } from "./tools/github_tools.js";
 import { fetch_transcript, summarize_article, extract_key_points } from "./tools/contentSummarizer.js";
 import { text_to_diagram } from "./tools/textToDiagram.js";
+import {
+  search_people_info,
+  draft_linkedin_post,
+  suggest_hashtags,
+  analyze_engagement,
+  get_user_profile as linkedin_get_profile,
+  publish_post,
+  publish_post_with_image
+} from "./tools/linkedinGenerator.js";
 import { mcpServer } from "./config/mcpServer.js";
 import { z } from "zod";
 import {
@@ -233,34 +241,6 @@ mcpServer.tool(
 );
 
 mcpServer.tool(
-  "readProjectFile",
-  "Read the content of a file from the local filesystem",
-  {
-    filePath: z.string().describe("Absolute path to the file"),
-  },
-  async ({ filePath }) => read_file(filePath)
-);
-
-mcpServer.tool(
-  "updateCodeSnippet",
-  "Update or create a file with new content",
-  {
-    filePath: z.string().describe("Absolute path to the file"),
-    content: z.string().describe("New content for the file"),
-  },
-  async ({ filePath, content }) => update_code(filePath, content)
-);
-
-mcpServer.tool(
-  "listProjectFiles",
-  "List files and directories in a given path",
-  {
-    dirPath: z.string().describe("Absolute path to the directory"),
-  },
-  async ({ dirPath }) => list_files(dirPath)
-);
-
-mcpServer.tool(
   "gitCheckStatus",
   "Check the current status of the git repository",
   {},
@@ -421,4 +401,82 @@ mcpServer.tool(
   async ({ text, diagramType, outputFormat }) => text_to_diagram(text, diagramType, outputFormat)
 );
 
+// LINKEDIN POST GENERATOR TOOLS (Direct API - No OAuth Flow Needed)
+// User completes OAuth once manually, then uses access token forever
+
+mcpServer.tool(
+  "linkedinGetProfile",
+  "Get the authenticated user's LinkedIn profile information. Verifies that the API connection is working.",
+  {},
+  async () => linkedin_get_profile()
+);
+
+
+// Direct Posting
+mcpServer.tool(
+  "linkedinPublishPost",
+  "Publish a post directly to LinkedIn. Requires valid LINKEDIN_ACCESS_TOKEN in environment.",
+  {
+    content: z.string().describe("The full text content of the LinkedIn post to publish"),
+    visibility: z.enum(["PUBLIC", "CONNECTIONS"]).optional().default("PUBLIC").describe("Who can see the post: PUBLIC (everyone) or CONNECTIONS (1st degree only)"),
+  },
+  async ({ content, visibility }) => publish_post(content, visibility)
+);
+
+mcpServer.tool(
+  "linkedinPublishPostWithImage",
+  "Publish a LinkedIn post with an image attachment. The image must be a publicly accessible URL.",
+  {
+    content: z.string().describe("The text content of the LinkedIn post"),
+    imageUrl: z.string().url().describe("Public URL of the image to attach"),
+    visibility: z.enum(["PUBLIC", "CONNECTIONS"]).optional().default("PUBLIC"),
+  },
+  async ({ content, imageUrl, visibility }) => publish_post_with_image(content, imageUrl, visibility)
+);
+
+// Content Generation
+mcpServer.tool(
+  "linkedinSearchPeople",
+  "Search for professional information about people. Provides LinkedIn search guidance and recommendations.",
+  {
+    query: z.string().describe("Name or role of the person to search for (e.g., 'Elon Musk', 'tech startup founders')"),
+    context: z.string().optional().describe("Additional context for the search"),
+  },
+  async ({ query, context }) => search_people_info(query, context)
+);
+
+mcpServer.tool(
+  "linkedinDraftPost",
+  "Draft an optimized LinkedIn post from an achievement or content. Can optionally auto-publish if LinkedIn API is configured.",
+  {
+    achievement: z.string().describe("The main content, achievement, or announcement to turn into a LinkedIn post"),
+    context: z.string().optional().describe("Additional context or details to include"),
+    tone: z.enum(["professional", "casual", "inspirational", "humble", "confident"]).optional().default("professional"),
+    postType: z.enum(["auto", "achievement", "announcement", "thought_leadership", "lessons_learned", "celebration"]).optional().default("auto"),
+    includeEmojis: z.boolean().optional().default(true),
+    autoPublish: z.boolean().optional().default(false).describe("If true and LinkedIn API is configured, automatically publish the post"),
+  },
+  async ({ achievement, context, tone, postType, includeEmojis, autoPublish }) =>
+    draft_linkedin_post(achievement, context, tone, postType, includeEmojis, autoPublish)
+);
+
+mcpServer.tool(
+  "linkedinSuggestHashtags",
+  "Suggest relevant hashtags for a LinkedIn post based on content and industry.",
+  {
+    content: z.string().describe("The LinkedIn post content or topic to generate hashtags for"),
+    count: z.number().optional().default(10).describe("Number of hashtags to suggest"),
+  },
+  async ({ content, count }) => suggest_hashtags(content, count)
+);
+
+mcpServer.tool(
+  "linkedinAnalyzeEngagement",
+  "Analyze a LinkedIn post for engagement potential. Provides score, optimization tips, and best posting times.",
+  {
+    postContent: z.string().describe("The full LinkedIn post content to analyze"),
+    targetAudience: z.string().optional().default("professionals"),
+  },
+  async ({ postContent, targetAudience }) => analyze_engagement(postContent, targetAudience)
+);
 

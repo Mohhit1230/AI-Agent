@@ -6,11 +6,7 @@
     Daily Use: Automatically log project ideas or capture interesting links found during browserSearch into your workspace.
     Function: note_add, note_view, note_delete, archive_note, unarchive_note, note_search
 
-3. Local File System Reader/Writer: 🔍
-    Function: read_project_file, update_code_snippet.
-    Daily Use: Ask the agent to analyze another project folder on your PC and suggest refactors.
-
-4. GitHub / GitLab Assistant: 🚀 ✅
+3. GitHub / GitLab Assistant: 🚀 ✅
     Function: git_status, git_commit, git_push, github_issue, github_pr, github_repo_stats.
     Daily Use: "Commit my changes and push to main" or "Look up the most starred AI repos on GitHub today."
 
@@ -74,10 +70,16 @@ Function: draft_professional_email, suggest_reply, tone_check
 Daily Use: "Draft a follow-up email to the client about the delayed project"
 Why it matters: Saves 30+ minutes daily on email composition
 
-22. LinkedIn Post Generator
-Function: search_people_info, draft_linkedin_post, suggest_hashtags, analyze_engagement
-Daily Use: "Turn this achievement into a LinkedIn post"
-Why it matters: Personal branding made effortless
+22. LinkedIn Post Generator ✅ (Full API Integration)
+Function: linkedinGetProfile, linkedinPublishPost, linkedinPublishPostWithImage, linkedinDraftPost, linkedinSuggestHashtags, linkedinAnalyzeEngagement, linkedinSearchPeople
+Daily Use: "Turn this achievement into a LinkedIn post" or "Post this directly to my LinkedIn"
+Features: 
+  - Direct posting to LinkedIn (text & images)
+  - Auto-detect post type (achievement, announcement, thought leadership, etc.)
+  - Engagement scoring (0-100)
+  - Industry-specific hashtag recommendations
+  - Best posting times by day
+Why it matters: Personal branding made effortless with direct API integration
 
 23. Multi-Step Workflow Automation
 Function: create_workflow, run_automation, schedule_task
