@@ -111,3 +111,7 @@ Supports: Mermaid, PlantUML, GraphViz, Ditaa, BlockDiag, SeqDiag, ActDiag, NwDia
 37. Share Chat feature
 Function: share_chat
 Daily Use: "Share this chat with my team or selected users"
+
+
+
+use postgresql database and cloudflare r2 for storage
