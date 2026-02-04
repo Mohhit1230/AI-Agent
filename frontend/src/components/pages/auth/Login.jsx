@@ -75,10 +75,38 @@ const Login = () => {
 
     return (
         <div className="h-screen flex items-center justify-center p-5 md:p-10 bg-gradient-to-br from-[#0f1115] via-[#11181c] to-[#0f1115] relative overflow-hidden font-mulish">
-            {/* Animated Background */}
-            <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] bg-emerald-500/10 blur-[100px] rounded-full" />
-                <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-cyan-500/10 blur-[100px] rounded-full" />
+            {/* Transcript/Character Background - NO PURPLE, NO EMERALD, Cyan Accent */}
+            <div className="absolute inset-0 pointer-events-none bg-[#0a0a0a]">
+                {/* Cyan Gradient Orbs */}
+                <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-black/10 rounded-full blur-[120px] mix-blend-screen animate-pulse" style={{ animationDuration: '8s' }} />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-black/10  rounded-full blur-[100px] mix-blend-screen animate-pulse" style={{ animationDuration: '10s', animationDelay: '1s' }} />
+                <div className="absolute top-[40%] left-[30%] w-[400px] h-[400px] bg-black/10 rounded-full blur-[80px] mix-blend-screen animate-pulse" style={{ animationDuration: '12s', animationDelay: '2s' }} />
+
+                {/* Character/Symbol Pattern Overlay */}
+                {/* Character/Symbol Pattern Overlay - Shadows Into Light */}
+                <svg className="absolute inset-0 w-full h-full opacity-[0.07] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="transcript-pattern" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+                            <text x="12" y="24" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(-12, 12, 24)">?</text>
+                            <text x="165" y="40" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(25, 165, 40)">Ж</text>
+                            <text x="88" y="55" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(-8, 88, 55)">汉</text>
+                            <text x="140" y="85" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(15, 140, 85)">#</text>
+                            <text x="30" y="95" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(30, 30, 95)">Ñ</text>
+                            <text x="75" y="115" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(-20, 75, 115)">$</text>
+                            <text x="180" y="130" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(10, 180, 130)">Ф</text>
+                            <text x="15" y="155" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(-35, 15, 155)">%</text>
+                            <text x="110" y="160" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(45, 110, 160)">¿</text>
+                            <text x="55" y="175" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(-15, 55, 175)">字</text>
+                            <text x="155" y="185" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(20, 155, 185)">Ω</text>
+                            <text x="190" y="70" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(-10, 190, 70)">{`}`}</text>
+                            <text x="50" y="30" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(-25, 50, 30)">Д</text>
+                            <text x="95" y="10" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(12, 95, 10)">&</text>
+                            <text x="125" y="145" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(-40, 125, 145)">|</text>
+                            <text x="170" y="105" fontSize="14" className="font-shadows" fill="white" style={{ fontWeight: 100 }} transform="rotate(18, 170, 105)">书</text>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#transcript-pattern)" style={{ maskImage: 'radial-gradient(ellipse at center, black 40%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse at center, black 40%, transparent 100%)' }} />
+                </svg>
             </div>
 
             {/* Card */}
@@ -119,7 +147,7 @@ const Login = () => {
                                     className={`w-full py-3.5 px-4 pl-12 bg-white/[0.03] border rounded-xl text-white text-sm outline-none transition-all duration-300 placeholder:text-white/20
                     ${errors.email
                                             ? "border-red-500/50 bg-red-500/5"
-                                            : "border-white/10 group-hover:border-emerald-500/30 focus:border-emerald-500/50"
+                                            : "border-white/10 group-hover:border-cyan-500/30 focus:border-cyan-500/50"
                                         }`}
                                     placeholder="name@example.com"
                                     {...register("email", {
@@ -130,7 +158,7 @@ const Login = () => {
                                         },
                                     })}
                                 />
-                                <Mail className={`absolute left-4 top-1/2 -translate-y-1/2 w-[18px] transition-colors duration-300 ${errors.email ? "text-red-400" : "text-neutral-500 group-hover:text-emerald-400"}`} />
+                                <Mail className={`absolute left-4 top-1/2 -translate-y-1/2 w-[18px] transition-colors duration-300 ${errors.email ? "text-red-400" : "text-neutral-500 group-hover:text-cyan-400"}`} />
                             </div>
                             {errors.email && (
                                 <span className="text-red-400 text-xs ml-1 mt-1 font-medium">
@@ -158,14 +186,14 @@ const Login = () => {
                                     className={`w-full py-3.5 px-4 pl-12 pr-12 bg-white/[0.03] border rounded-xl text-white text-sm outline-none transition-all duration-300 placeholder:text-white/20
                     ${errors.password
                                             ? "border-red-500/50 bg-red-500/5"
-                                            : "border-white/10 group-hover:border-emerald-500/30 focus:border-emerald-500/50"
+                                            : "border-white/10 group-hover:border-cyan-500/30 focus:border-cyan-500/50"
                                         }`}
                                     placeholder="••••••••"
                                     {...register("password", {
                                         required: "Password is required",
                                     })}
                                 />
-                                <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 w-[18px] transition-colors duration-300 ${errors.password ? "text-red-400" : "text-neutral-500 group-hover:text-emerald-400"}`} />
+                                <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 w-[18px] transition-colors duration-300 ${errors.password ? "text-red-400" : "text-neutral-500 group-hover:text-cyan-400"}`} />
                                 <button
                                     type="button"
                                     className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white transition-colors"
