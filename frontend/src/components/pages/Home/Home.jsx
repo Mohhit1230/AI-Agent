@@ -172,10 +172,7 @@ const Home = ({ showPreloader }) => {
         className={`flex  min-h-screen ${showPreloader ? "h-screen overflow-hidden" : ""
           } selection:bg-cyan-500/40 selection:text-white`}
       >
-        <div className="fixed inset-0 pointer-events-none">
-          <div className="absolute top-[-20%] left-[-4%] w-[40%] h-[40%] bg-emerald-500/10 blur-[60px] rounded-full" />
-          <div className="absolute bottom-[-10%] right-[-20%] w-[40%] h-[40%] bg-cyan-500/10 blur-[60px] rounded-full" />
-        </div>
+        {/* Clean background - grid pattern handled by CSS */}
 
         <DrawerBasic
           isOpen={isOpen}
@@ -450,7 +447,7 @@ const Home = ({ showPreloader }) => {
             </div>
 
             {/* Input Fixed Bottom Overlay (ChatGPT Style) */}
-            <div className="fixed bottom-0 left-0 lg:left-auto right-0 lg:w-[calc(100%-260px)] z-20 bg-gradient-to-t from-[#0f1115] via-[#0f1115]/90 to-transparent pt-12 pb-1 px-4 md:px-6 pointer-events-none">
+            <div className="fixed bottom-0 left-0 lg:left-auto right-0 lg:w-[calc(100%-260px)] z-20 bg-gradient-to-t from-[#09090b] via-[#09090b]/95 to-transparent pt-12 pb-1 px-4 md:px-6 pointer-events-none">
               <div className="max-w-3xl mx-auto w-full pointer-events-auto">
                 <div className="relative group">
                   <textarea
@@ -464,7 +461,7 @@ const Home = ({ showPreloader }) => {
                     placeholder="Ask anything ..."
                     spellCheck={false}
                     autoComplete="off"
-                    className="w-full bg-[#1e2025] text-white rounded-2xl border border-white/10 px-4 py-4 pr-14 text-sm outline-none resize-none h-14 max-h-40 focus:border-white/50 transition-colors shadow-2xl placeholder:tracking-wider"
+                    className="w-full bg-[#1e2025] text-white rounded-2xl px-4 py-4 pr-14 text-sm outline-none resize-none h-14 max-h-40 focus:border-emerald-500/30 transition-all placeholder:tracking-wider placeholder:text-white/20"
                   />
                   <div className="absolute right-3.5 bottom-5.5">
                     {loading ? (
@@ -496,7 +493,7 @@ const Home = ({ showPreloader }) => {
                 </button>
 
                 <p className="text-[10px] text-center text-neutral-500 mt-3 font-medium tracking-tight">
-                  Prosperity Agent (OpenAI + Gemini) may display inaccurate info,
+                  Prosmic (OpenAI + Gemini) may display inaccurate info,
                   so double-check important responses.
                 </p>
               </div>

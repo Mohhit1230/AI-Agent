@@ -29,9 +29,8 @@ const ForgotPassword = () => {
 
     if (isSent) {
         return (
-            <div className="min-h-screen flex items-center justify-center p-5 md:p-10 bg-gradient-to-br from-[#0f1115] via-[#11181c] to-[#0f1115] relative overflow-hidden font-mulish">
-                <div className="absolute inset-0 pointer-events-none bg-[#0a0a0a]">
-                    <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] mix-blend-screen animate-pulse" style={{ animationDuration: '8s' }} />
+            <div className="min-h-screen flex items-center justify-center p-5 md:p-10 bg-[#09090b] relative overflow-hidden font-mulish">
+                <div className="absolute inset-0 pointer-events-none">
 
                     <svg className="absolute inset-0 w-full h-full opacity-[0.07] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
@@ -64,8 +63,8 @@ const ForgotPassword = () => {
                         <rect width="100%" height="100%" fill="url(#transcript-pattern)" style={{ maskImage: 'radial-gradient(ellipse at center, black 40%, transparent 100%)', WebkitMaskImage: 'radial-gradient(ellipse at center, black 40%, transparent 100%)' }} />
                     </svg>
                 </div>
-                <div className="w-full max-w-[400px] bg-[#1a1c21]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-10 shadow-2xl relative z-10 text-center animate-[fadeInUp_0.5s_ease-out]">
-                    <div className="w-16 h-16 mx-auto mb-6 bg-cyan-500/10 rounded-2xl flex items-center justify-center text-cyan-400 border border-cyan-500/20">
+                <div className="w-full max-w-[400px] glass-card rounded-3xl p-10 relative z-10 text-center animate-[fadeInUp_0.5s_ease-out]">
+                    <div className="w-16 h-16 mx-auto mb-6 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-400 border border-emerald-500/20">
                         <CheckCircle2 size={32} />
                     </div>
                     <h2 className="text-2xl font-bold text-white mb-4">Reset Email Sent</h2>
@@ -84,13 +83,9 @@ const ForgotPassword = () => {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-5 md:p-10 bg-gradient-to-br from-[#0f1115] via-[#11181c] to-[#0f1115] relative overflow-hidden font-mulish">
-            {/* Transcript/Character Background - NO PURPLE, NO EMERALD, Cyan Accent */}
-            <div className="absolute inset-0 pointer-events-none bg-[#0a0a0a]">
-                {/* Cyan Gradient Orbs */}
-                <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-black/10 rounded-full blur-[120px] mix-blend-screen animate-pulse" style={{ animationDuration: '8s' }} />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-black/10  rounded-full blur-[100px] mix-blend-screen animate-pulse" style={{ animationDuration: '10s', animationDelay: '1s' }} />
-                <div className="absolute top-[40%] left-[30%] w-[400px] h-[400px] bg-black/10 rounded-full blur-[80px] mix-blend-screen animate-pulse" style={{ animationDuration: '12s', animationDelay: '2s' }} />
+        <div className="min-h-screen flex items-center justify-center p-5 md:p-10 bg-[#09090b] relative overflow-hidden font-mulish">
+            {/* Clean Background with Character Pattern */}
+            <div className="absolute inset-0 pointer-events-none">
 
                 {/* Character/Symbol Pattern Overlay */}
                 {/* Character/Symbol Pattern Overlay - Shadows Into Light */}
@@ -119,8 +114,8 @@ const ForgotPassword = () => {
                 </svg>
             </div>
 
-            <div className="w-full max-w-[420px] bg-[#1a1c21]/80 backdrop-blur-xl border border-white/5 rounded-3xl shadow-2xl relative z-10 animate-[fadeInUp_0.6s_ease-out] overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-1 bg-cyan-500 opacity-50" />
+            <div className="w-full max-w-[420px] glass-card rounded-3xl relative z-10 animate-[fadeInUp_0.6s_ease-out] overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
                 <div className="px-10 pt-12 pb-6 text-center">
                     <Link to="/login" className="absolute top-8 left-8 p-2 rounded-xl bg-white/5 border border-white/5 text-neutral-400 hover:text-cyan-400 transition-all">
                         <ArrowLeft size={18} />

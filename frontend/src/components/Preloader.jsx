@@ -247,7 +247,7 @@ const Preloader = ({ onComplete }) => {
               <div className="absolute top-0 left-0 w-full h-[300%] bg-gradient-to-b from-white/0 via-white/10 to-white/0 rotate-[35deg] translate-y-[-100%] animate-[glint_4s_linear_infinite]" />
 
               <img
-                src="/logo2.webp"
+                src="/logo.png"
                 alt="Logo"
                 className="w-full h-full object-contain filter drop-shadow(0 15px 30px rgba(0,0,0,0.5))"
               />

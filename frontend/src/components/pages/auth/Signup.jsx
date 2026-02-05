@@ -94,13 +94,9 @@ const Signup = () => {
     });
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-5 md:p-10 bg-gradient-to-br from-[#0f1115] via-[#11181c] to-[#0f1115] relative overflow-hidden font-mulish">
-            {/* Transcript/Character Background - NO PURPLE, NO EMERALD, Cyan Accent */}
-            <div className="fixed inset-0 pointer-events-none bg-[#0a0a0a]">
-                {/* Cyan Gradient Orbs */}
-                <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-black/10 rounded-full blur-[120px] mix-blend-screen animate-pulse" style={{ animationDuration: '8s' }} />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-black/10  rounded-full blur-[100px] mix-blend-screen animate-pulse" style={{ animationDuration: '10s', animationDelay: '1s' }} />
-                <div className="absolute top-[40%] left-[30%] w-[400px] h-[400px] bg-black/10 rounded-full blur-[80px] mix-blend-screen animate-pulse" style={{ animationDuration: '12s', animationDelay: '2s' }} />
+        <div className="min-h-screen flex items-center justify-center p-5 md:p-10 bg-[#09090b] relative overflow-hidden font-mulish">
+            {/* Clean Background with Character Pattern */}
+            <div className="fixed inset-0 pointer-events-none">
 
                 {/* Character/Symbol Pattern Overlay */}
                 {/* Character/Symbol Pattern Overlay - Shadows Into Light */}
@@ -130,9 +126,9 @@ const Signup = () => {
             </div>
 
             {/* Card */}
-            <div className="w-full max-w-[440px] bg-[#1a1c21]/80 backdrop-blur-xl border border-white/5 rounded-3xl shadow-2xl relative z-10 animate-[fadeInUp_0.6s_ease-out] overflow-hidden">
-                {/* Glow Header */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-cyan-500 opacity-50" />
+            <div className="w-full max-w-[440px] glass-card rounded-3xl relative z-10 animate-[fadeInUp_0.6s_ease-out] overflow-hidden">
+                {/* Subtle Top Accent */}
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
 
                 <div className="px-10 pt-8 pb-3 text-center">
                     <img src="/favicon1.png" alt="" className="w-12 h-12 mx-auto mb-5" />
@@ -140,7 +136,7 @@ const Signup = () => {
                         Create Account
                     </h1>
                     <p className="text-neutral-400 text-sm">
-                        Join the Prosperity Agent platform
+                        Join the Prosmic platform
                     </p>
                 </div>
 

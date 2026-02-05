@@ -219,12 +219,9 @@ const About = () => {
       ref={containerRef}
       className="bg-[#0b0c10] min-h-screen text-slate-300 selection:bg-emerald-500/30 font-mono overflow-x-hidden"
     >
-      {/* Premium Background */}
+      {/* Premium Background - Clean without blobs */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-500/10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-cyan-500/10 blur-[120px] rounded-full" />
-        <div className="absolute top-[40%] right-[20%] w-[30%] h-[30%] bg-orange-500/5 blur-[100px] rounded-full" />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02] mix-blend-overlay" />
       </div>
 
       {/* Side Progress / Navigation (Desktop Only) */}
@@ -243,16 +240,15 @@ const About = () => {
       </div>
 
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-[100] w-full h-20 border-b border-white/5 bg-[#0b0c10]/80 backdrop-blur-xl flex items-center justify-between px-6 md:px-12">
+      <nav className="fixed top-0 left-0 right-0 z-[100] w-full h-20 border-b border-white/[0.04] glass-strong flex items-center justify-between px-6 md:px-12">
         <div
           className="w-48 flex items-center gap-2 px-2 py-3 mb-2 cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <div className="absolute h-16 w-52 top-0 left-16 inset-0 bg-emerald-500/6 blur-md" />
           <img
-            src="/logo2.webp"
+            src="/logo.png"
             alt="Logo"
-            className="w-full h-full object-cover relative z-10 brightness-110"
+            className="w-full h-full object-cover relative z-10"
           />
         </div>
 
@@ -287,7 +283,7 @@ const About = () => {
           </h1>
 
           <p className="hero-content max-w-2xl text-lg font-sans text-slate-400 leading-relaxed font-medium">
-            Prosperity Agent is a sophisticated workspace designed for high-performance automation.
+            Prosmic is a sophisticated workspace designed for high-performance automation.
             It merges <span className="text-white">autonomous web navigation</span>,{" "}
             <span className="text-white">real-time codebase management</span>, and{" "}
             <span className="text-white">intelligent summarization</span> into a single, seamless interaction layer —
@@ -526,7 +522,7 @@ const About = () => {
 
               <div className="relative p-4 py-3 rounded-3xl  border border-cyan-500/50 bg-cyan-500/5 group-hover:border-cyan-500/0 group-hover:bg-emerald-950/0 transition-all duration-500 scale-110">
                 <img
-                  src="/logo1.webp"
+                  src="/logo.png"
                   alt=""
                   className="w-80 h-full object-cover brightness-110"
                 />

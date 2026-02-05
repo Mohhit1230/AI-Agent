@@ -47,7 +47,7 @@ const DrawerBasic = ({ isOpen, setIsOpen, deleteHistory }) => {
 
       {/* Sidebar/Drawer */}
       <aside
-        className={`fixed lg:sticky top-0 left-0 h-screen w-[260px] bg-[#0d0f13] border-r border-white/5 z-[101] lg:z-40 
+        className={`fixed lg:sticky top-0 left-0 h-screen w-[260px] glass-strong border-r border-white/[0.04] z-[101] lg:z-40 
         transform transition-all 
         ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
       `}
@@ -58,7 +58,7 @@ const DrawerBasic = ({ isOpen, setIsOpen, deleteHistory }) => {
               <div className="h-10 w-full relative px-6">
                 <div className="absolute inset-0 bg-emerald-500/6 blur-md" />
                 <img
-                  src="/logo2.webp"
+                  src="/logo.png"
                   alt="Logo"
                   className="w-full h-full object-cover relative z-10 brightness-110"
                 />

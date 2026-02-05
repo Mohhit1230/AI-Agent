@@ -43,7 +43,7 @@ const NewChatScreen = () => {
         <h1 className="relative text-4xl md:text-5xl font-black tracking-tight text-white leading-tight">
           Welcome to{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
-            Prosperity
+            Prosmic
           </span>
         </h1>
       </div>

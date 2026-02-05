@@ -1,10 +1,10 @@
-# Prosperity Agent 🤖 - Advanced AI Workspace
+# Prosmic 🤖 - Advanced AI Workspace
 
 ![Version](https://img.shields.io/badge/version-2.0-emerald)
 ![AI](https://img.shields.io/badge/AI-OpenAI%20%2B%20Gemini-blue)
 ![License](https://img.shields.io/badge/license-Educational-green)
 
-Prosperity Agent is a powerful, unified AI assistant built with the MERN stack architecture. It features a **multi-provider AI system** with **OpenAI o3-mini** as the primary model and **Google Gemini 2.5 Flash** as fallback, leveraging the **Model Context Protocol (MCP)** for seamless tool integration.
+Prosmic is a powerful, unified AI assistant built with the MERN stack architecture. It features a **multi-provider AI system** with **OpenAI o3-mini** as the primary model and **Google Gemini 2.5 Flash** as fallback, leveraging the **Model Context Protocol (MCP)** for seamless tool integration.
 
 This isn't just a chatbot — it's a complete AI workspace that integrates browser automation, email delivery, social media posting, document generation, Google productivity tools, and full **GitHub/Git workspace management** into a sleek, premium interface.
 
@@ -244,7 +244,7 @@ Contributions are welcome! Feel free to:
 ---
 
 <div align="center">
-  <strong>⚡ Prosperity Agent - Your Unified AI Workspace ⚡</strong>
+  <strong>⚡ Prosmic - Your Unified AI Workspace ⚡</strong>
   <br/>
   <sub>Powered by OpenAI o3-mini + Google Gemini 2.5 Flash</sub>
 </div>

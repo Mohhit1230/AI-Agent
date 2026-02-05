@@ -5,6 +5,16 @@
 :root {
   --font-mulish: "Mulish", sans-serif;
   --font-shadows: "Shadows Into Light", cursive;
+
+  /* Modern Dark Theme Palette */
+  --bg-primary: #09090b;
+  --bg-secondary: #0c0c0e;
+  --bg-tertiary: #111113;
+  --glass-bg: rgba(255, 255, 255, 0.02);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-hover: rgba(255, 255, 255, 0.04);
+  --accent-primary: #10b981;
+  --accent-secondary: #06b6d4;
 }
 
 .font-shadows {
@@ -19,7 +29,33 @@
 }
 
 body {
-  background: #0f1115;
+  background: var(--bg-primary);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Glassmorphism Utilities */
+
+
+.glass-strong {
+  background: rgba(17, 17, 19, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+
+
+/* Subtle glow effects */
+.glow-emerald {
+  box-shadow: 0 0 40px rgba(16, 185, 129, 0.15);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 40px rgba(6, 182, 212, 0.15);
 }
 
 /* Performance optimizations */
