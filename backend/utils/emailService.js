@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 // Email templates
 const emailTemplates = {
   otp: (name, otp) => ({
-    subject: "🔐 Your Verification Code - Prosperity Agent",
+    subject: "🔐 Your Verification Code - Prosmic Agent",
     html: `
 <!DOCTYPE html>
 <html>
@@ -35,7 +35,7 @@ const emailTemplates = {
                <img src="https://ai-agent-mocha-pi.vercel.app/favicon1.png" style="width: 40px; height: 40px;" />
               </div>
               <h1 style="margin: 0 0 8px; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">Verification Code</h1>
-              <p style="margin: 0; color: rgba(255,255,255,0.5); font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Prosperity Agent</p>
+              <p style="margin: 0; color: rgba(255,255,255,0.5); font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Prosmic Agent</p>
             </td>
           </tr>
           
@@ -74,7 +74,7 @@ const emailTemplates = {
           <tr>
             <td style="padding: 24px 40px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05);">
               <p style="margin: 0; color: rgba(255,255,255,0.3); font-size: 12px; text-align: center;">
-                © ${new Date().getFullYear()} Prosperity Agent • Powered by AI
+                © ${new Date().getFullYear()} Prosmic Agent • Powered by AI
               </p>
             </td>
           </tr>
@@ -88,7 +88,7 @@ const emailTemplates = {
   }),
 
   resetPassword: (name, otp) => ({
-    subject: "🔑 Reset Your Password - Prosperity Agent",
+    subject: "🔑 Reset Your Password - Prosmic Agent",
     html: `
 <!DOCTYPE html>
 <html>
@@ -108,7 +108,7 @@ const emailTemplates = {
                 <img src="https://ai-agent-mocha-pi.vercel.app/favicon1.png" style="width: 40px; height: 40px;" />
               </div>
               <h1 style="margin: 0 0 8px; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">Password Reset</h1>
-              <p style="margin: 0; color: rgba(255,255,255,0.5); font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Prosperity Agent</p>
+              <p style="margin: 0; color: rgba(255,255,255,0.5); font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Prosmic Agent</p>
             </td>
           </tr>
           
@@ -147,7 +147,7 @@ const emailTemplates = {
           <tr>
             <td style="padding: 24px 40px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05);">
               <p style="margin: 0; color: rgba(255,255,255,0.3); font-size: 12px; text-align: center;">
-                © ${new Date().getFullYear()} Prosperity Agent • Powered by AI
+                © ${new Date().getFullYear()} Prosmic Agent • Powered by AI
               </p>
             </td>
           </tr>
@@ -161,7 +161,7 @@ const emailTemplates = {
   }),
 
   welcome: (name) => ({
-    subject: "🎉 Welcome to Prosperity Agent!",
+    subject: "🎉 Welcome to Prosmic Agent!",
     html: `
 <!DOCTYPE html>
 <html>
@@ -181,7 +181,7 @@ const emailTemplates = {
                 <img src="https://ai-agent-mocha-pi.vercel.app/favicon1.png" style="width: 40px; height: 40px;" />
               </div>
               <h1 style="margin: 0 0 8px; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px; ">Welcome Aboard!</h1>
-              <p style="margin: 0; color: rgba(255,255,255,0.5); font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Prosperity Agent</p>
+              <p style="margin: 0; color: rgba(255,255,255,0.5); font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Prosmic Agent</p>
             </td>
           </tr>
           
@@ -227,7 +227,7 @@ const emailTemplates = {
           <tr>
             <td style="padding: 24px 40px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05);">
               <p style="margin: 0; color: rgba(255,255,255,0.3); font-size: 12px; text-align: center;">
-                © ${new Date().getFullYear()} Prosperity Agent • Powered by AI
+                © ${new Date().getFullYear()} Prosmic Agent • Powered by AI
               </p>
             </td>
           </tr>
@@ -247,7 +247,7 @@ export const sendEmail = async (to, template, data) => {
     const { subject, html } = emailTemplates[template](...data);
 
     const mailOptions = {
-      from: `"Prosperity Agent" <${process.env.HOST_EMAIL}>`,
+      from: `"Prosmic Agent" <${process.env.HOST_EMAIL}>`,
       to,
       subject,
       html,
