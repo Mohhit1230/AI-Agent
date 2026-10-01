@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
-import { config } from "dotenv";
-config();
+import dotenv from "dotenv";
+dotenv.config();
 
 //Mail Setup
 const transporter = nodemailer.createTransport({
@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 
 export async function email({ to, subject, text }) {
   const mailOptions = {
-    from: "MS Agent 👾",
+    from: "Prosmic Agent 👾",
     to,
     subject,
     text,

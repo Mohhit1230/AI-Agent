@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const connectDB = async () => {
     try {
         const conn = await mongoose.connect(process.env.MONGODB_URI, {
-            family: 4
+            // Modern mongoose doesn't require these options anymore
+            // but keeping for potential older versions compatibility
         });
         console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
         return conn;
