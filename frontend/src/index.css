@@ -1,7 +1,5 @@
-@import "tailwindcss";
-
 @import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
-
+@import "tailwindcss";
 :root {
   --font-mulish: "Mulish", sans-serif;
   --font-shadows: "Shadows Into Light", cursive;

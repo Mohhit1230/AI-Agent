@@ -1,19 +1,24 @@
 import nodemailer from "nodemailer";
+import { google } from "googleapis";
 import dotenv from "dotenv";
-import dns from "dns";
-
-// Force IPv4 for Render (fixes ETIMEDOUT issues)
-dns.setDefaultResultOrder("ipv4first");
 
 dotenv.config();
 
-// Create reusable transporter
+// Initialize the Google OAuth2 client (Bypasses Render SMTP Block via HTTP)
+const oAuth2Client = new google.auth.OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  "https://developers.google.com/oauthplayground"
+);
+oAuth2Client.setCredentials({ refresh_token: process.env.GOOGLE_REFRESH_TOKEN });
+
+const gmail = google.gmail({ version: "v1", auth: oAuth2Client });
+
+// We use Nodemailer with 'streamTransport' so it generates the raw email structure 
+// locally instead of trying to connect to a blocked SMTP port!
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.HOST_EMAIL,
-    pass: process.env.HOST_PASSWORD,
-  },
+  streamTransport: true,
+  newline: "windows",
 });
 
 // Email templates
@@ -257,22 +262,34 @@ export const sendEmail = async (to, template, data) => {
       html,
     };
 
+    // 1. Let Nodemailer generate the raw MIME email stream
     const info = await transporter.sendMail(mailOptions);
-    console.log(`📧 Email sent: ${to}`);
-    return { success: true, messageId: info.messageId };
+    
+    // 2. Convert stream to base64 string
+    const chunks = [];
+    for await (const chunk of info.message) {
+      chunks.push(chunk);
+    }
+    const messageBuffer = Buffer.concat(chunks);
+    const encodedMail = messageBuffer.toString("base64")
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, ''); // Base64URL encode as required by Gmail API
+
+    // 3. Send over HTTP to Gmail API (bypasses Render SMTP Block)
+    const res = await gmail.users.messages.send({
+      userId: 'me',
+      requestBody: {
+        raw: encodedMail,
+      },
+    });
+
+    console.log(`📧 Email sent securely via HTTP: ${to}`);
+    return { success: true, messageId: res.data.id };
   } catch (error) {
     console.error("❌ Email sending failed:", error);
     throw new Error("Failed to send email");
   }
 };
-
-// Verify transporter on startup
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("❌ Email transporter error:", error);
-  } else {
-    console.log("📧 Email service ready");
-  }
-});
 
 export default transporter;

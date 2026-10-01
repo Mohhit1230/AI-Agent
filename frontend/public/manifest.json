@@ -1,6 +1,6 @@
 {
-  "name": "Prosperity Agent",
-  "short_name": "Prosperity",
+  "name": "Prosmic Agent",
+  "short_name": "Prosmic",
   "description": "Your advanced browser automation agent",
   "start_url": "/",
   "display": "standalone",
