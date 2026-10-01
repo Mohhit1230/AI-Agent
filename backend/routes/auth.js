@@ -263,20 +263,6 @@ router.post(
                 });
             }
 
-            if (!user.isVerified) {
-                // Send new OTP
-                const otp = user.generateOTP();
-                await user.save();
-                await sendEmail(email, "otp", [user.name, otp]);
-
-                return res.status(403).json({
-                    success: false,
-                    message: "Please verify your email first. New OTP sent.",
-                    requiresVerification: true,
-                    email,
-                });
-            }
-
             const isMatch = await user.comparePassword(password);
             if (!isMatch) {
                 return res.status(401).json({
