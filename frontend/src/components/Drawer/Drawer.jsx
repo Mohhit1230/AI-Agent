@@ -110,7 +110,7 @@ const DrawerBasic = ({ isOpen, setIsOpen, deleteHistory }) => {
             </Link>
 
             <a
-              href="https://github.com/Mohhit1230"
+              href="https://github.com/Mohhit1230/AI-Agent"
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition-all group"
